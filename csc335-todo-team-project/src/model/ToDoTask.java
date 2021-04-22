@@ -16,27 +16,26 @@ public class ToDoTask implements Serializable{
 	private boolean important;
     
 	public ToDoTask() {
-	    this.name="untitled task";
-	    this.description=null;
+	    this.name = "untitled task";
+	    this.description = null;
 	}
 	
 	public ToDoTask(String name) {
-	    this.name=name;
-	    this.description=null;
+	    this.name = name;
+	    this.description = null;
 	}
 	
-	public ToDoTask(String name,String description) {
-	    this.name=name;
-	    this.description=description;
+	public ToDoTask(String name, String description) {
+	    this.name = name;
+	    this.description = description;
 	    //System.out.println("Name:"+this.name+"\nDescription:"+this.description);  //TESTING PURPOSES
 	}
 	
 	public void rename(String newName) {  //TODO: implement somehow when functionality is added to GUI
-	    if(newName==null) {
-		System.out.println("Don't rename as null");
-	    }
-	    else {
-		this.name=newName;
+	    if(newName == null) {
+	    	System.out.println("Don't rename as null");
+	    } else {
+	    	this.name=newName;
 	    }
 	}
 	

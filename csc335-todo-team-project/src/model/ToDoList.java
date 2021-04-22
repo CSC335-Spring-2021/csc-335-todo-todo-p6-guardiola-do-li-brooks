@@ -13,35 +13,39 @@ public class ToDoList extends Observable implements Serializable {
     private ArrayList<ToDoTask> tasks;
 
     public ToDoList() {
-	this.tasks = new ArrayList<ToDoTask>();
+    	this.tasks = new ArrayList<ToDoTask>();
     }
 
-    public void addTask(String taskName,String description,String deadline,String importance) {
-	if (taskName != null) {
-	    ToDoTask newTask=new ToDoTask(taskName,description);
-	    this.tasks.add(newTask);  //TODO: IMPLEMENT DEADLINE AND IMPORTANCE FIELDS (additional constructors)
-	    System.out.println("ITEM ADDED"); //TODO: DEELTE. FOR TESTING
-	    notifyObservers((Object)newTask);
-	} else {
-	    System.out.println("***TASK NAME IS NULL. ENTER VALID NAME"); // for debugging
-	}
+    public void addTask(String taskName, String description, String deadline, String importance) {
+		if (taskName != null) {
+		    ToDoTask newTask=new ToDoTask(taskName,description);
+		    this.tasks.add(newTask);  //TODO: IMPLEMENT DEADLINE AND IMPORTANCE FIELDS (additional constructors)
+		    System.out.println("ITEM ADDED"); //TODO: DELETE print statements. FOR TESTING
+		    System.out.println(taskName);
+		    System.out.println(description);
+		    setChanged();
+		    notifyObservers((Object)newTask);
+		} else {
+		    System.out.println("***TASK NAME IS NULL. ENTER VALID NAME"); // for debugging
+		}
 
     }
 
     public void removeTask(ToDoTask task) {
-	boolean taskSeen = this.tasks.remove(task);
-	if (!taskSeen) {
-	    System.out.println("***Task entered is not in the To-Do List"); // for debugging
-	}else {
-	    notifyObservers();
-	}
+    	boolean taskSeen = this.tasks.remove(task);
+    	if (!taskSeen) {
+    		System.out.println("***Task entered is not in the To-Do List"); // for debugging
+    	}else {
+    		setChanged();
+    		notifyObservers();
+    	}
     }
 
     public void saveList() {
-	// TODO: Implement
+    	// TODO: Implement
     }
 
     public void loadList() {
-	// TODO: Implement
+    	// TODO: Implement
     }
 }

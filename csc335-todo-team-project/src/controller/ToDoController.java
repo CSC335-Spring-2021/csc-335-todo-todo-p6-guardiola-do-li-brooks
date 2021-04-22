@@ -9,24 +9,26 @@ import view.ToDoView;
 public class ToDoController {
 	// Can change way to hold lists.
 	private ArrayList<ToDoList> lists;
+	private int curList;
 	
 	public ToDoController() {
-	    this.lists=new ArrayList<ToDoList>();
+	    this.lists = new ArrayList<ToDoList>();
 	    this.lists.add(new ToDoList());
+	    curList = 0;
 	}
 	
 	public void addList() {
 	    //TODO: IMPLEMENT
 	}
 	
-	public void addTask(String name, String description,String deadline,String importance) { //assuming only one list. always adds to index 0 for now.
+	public void addTask(String name, String description, String deadline, String importance) { 
+		//assuming only one list. always adds to index 0 for now.
 	    //TODO Later: CHECK DEADLINE AND IMPORTANCE VALIDITY BEFORE ENTERING MODEL.
 	    //deadline and importance are ignored and uninitialized for now.
-	    if(lists.size()>0) {
-		lists.get(0).addTask(name,description,deadline,importance);
-	    }
-	    else {
-		System.out.println("THIS LIST IS EMPTY");
+	    if(lists.size() > 0) {
+	    	lists.get(0).addTask(name, description, deadline, importance);
+	    } else {
+	    	System.out.println("THIS LIST IS EMPTY");
 	    }
 	}
 	
@@ -36,6 +38,6 @@ public class ToDoController {
 	
 	@SuppressWarnings("deprecation")
 	public void addObserver(ToDoView view) {
-	    lists.get(0).addObserver(view);
+	    lists.get(curList).addObserver(view);
 	}
 }
