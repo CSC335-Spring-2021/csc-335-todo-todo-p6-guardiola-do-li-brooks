@@ -1,5 +1,9 @@
 package view;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -19,6 +23,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import model.ToDoModel;
 import model.ToDoTask;
 
 public class ToDoView extends Application implements Observer {
@@ -40,9 +46,26 @@ public class ToDoView extends Application implements Observer {
 	window.setCenter(taskSection);
 
 	// Below code might be needed to change depending on how ToDoController is
-	// implemented. In addition, there must be a way to add ToDoView as an
-	// Observer to the lists.
-	control = new ToDoController();
+	// implemented.
+	// Creates the model to be used by the controller.
+	ToDoModel modelToBeSent = null;
+	try {
+		// Case where there is/are existing ToDoLists saved.
+		FileInputStream file = new FileInputStream("save.dat");
+		ObjectInputStream ois = new ObjectInputStream(file);
+		modelToBeSent = (ToDoModel) ois.readObject();
+		ois.close();
+		file.close();
+	} catch (FileNotFoundException e) {
+		// Case where there is no existing ToDoLists saved.
+		modelToBeSent = new ToDoModel();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		System.out.println("I/O error while reading ObjectInputStream");
+	} catch (ClassNotFoundException e) {
+		System.out.println("Serialization class could not be found!");
+	}
+	control = new ToDoController(modelToBeSent);
 	control.addObserver(this);
 
 	// Buttons to be used to add tasks
@@ -51,6 +74,18 @@ public class ToDoView extends Application implements Observer {
 	// Event handler when button is clicked.
 	EventHandler<ActionEvent> taskHandler = new NewTaskHandler();
 	addTask.setOnAction(taskHandler);
+	
+	// Code to save all the lists when the window is closed.
+	stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+		@Override
+		public void handle(WindowEvent arg0) {
+			try {
+				control.saveLists();
+			} catch (IOException e) {
+				System.out.println("Error: Could not save Lists!");
+			}
+		}
+	});
 
 	stage.setScene(scene);
 	stage.show();

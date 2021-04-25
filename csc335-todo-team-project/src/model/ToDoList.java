@@ -21,8 +21,10 @@ public class ToDoList extends Observable implements Serializable {
 		    ToDoTask newTask=new ToDoTask(taskName,description);
 		    this.tasks.add(newTask);  //TODO: IMPLEMENT DEADLINE AND IMPORTANCE FIELDS (additional constructors)
 		    System.out.println("ITEM ADDED"); //TODO: DELETE print statements. FOR TESTING
-		    System.out.println(taskName);
-		    System.out.println(description);
+		    // For loop is for testing purposes. Delete later.
+		    for (ToDoTask task : tasks) {
+		    	System.out.println(task.getName());
+		    }
 		    setChanged();
 		    notifyObservers((Object)newTask);
 		} else {
@@ -39,13 +41,5 @@ public class ToDoList extends Observable implements Serializable {
     		setChanged();
     		notifyObservers();
     	}
-    }
-
-    public void saveList() {
-    	// TODO: Implement
-    }
-
-    public void loadList() {
-    	// TODO: Implement
     }
 }
