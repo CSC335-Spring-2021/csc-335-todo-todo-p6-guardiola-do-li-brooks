@@ -33,8 +33,8 @@ public class ToDoList extends Observable implements Serializable {
 
     }
 
-    public void removeTask(ToDoTask task) {
-    	boolean taskSeen = this.tasks.remove(task);
+    public void removeTask(int index) {
+    	boolean taskSeen = this.tasks.remove(index) != null;
     	if (!taskSeen) {
     		System.out.println("***Task entered is not in the To-Do List"); // for debugging
     	}else {

@@ -59,10 +59,10 @@ public class ToDoController {
 	 * 
 	 * @param task The ToDoTask to be removed.
 	 */
-	public void removeTask(ToDoTask task) {
+	public void removeTask(int index) {
 		// It might be better to send the name of the task to be deleted
 		// and have the model remove the task.
-	    model.removeTask(task);
+	    model.removeTask(index);
 	}
 	
 	/**

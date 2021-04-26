@@ -45,8 +45,8 @@ public class ToDoModel implements Serializable {
 	    }
 	}
 	
-	public void removeTask(ToDoTask task) {
-	    this.lists.get(curList).removeTask(task);
+	public void removeTask(int index) {
+	    this.lists.get(curList).removeTask(index);
 	}
 	
 	@SuppressWarnings("deprecation")

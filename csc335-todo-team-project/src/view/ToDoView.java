@@ -4,22 +4,32 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import controller.ToDoController;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -29,19 +39,24 @@ import model.ToDoTask;
 
 public class ToDoView extends Application implements Observer {
     private ToDoController control;
+    private BorderPane window; 
+    private VBox taskSection;
     private String curName;
     private String curDescription;
     private String curDeadline;
     private String curImportant;
-
+    private ObservableList<String> events = FXCollections.observableArrayList();
+    private ObservableList<Button> edit = FXCollections.observableArrayList();
+    private ObservableList<HBox> rows = FXCollections.observableArrayList();
+    private int id = 0;
     public void start(Stage stage) {
 	stage.setTitle("ToDo");
-	BorderPane window = new BorderPane();
+	window = new BorderPane();
 	// If anyone else wants a different window size mention it.
 	Scene scene = new Scene(window, 400, 600); // 400 px wide, 600 px tall
 
 	// VBox will be used to showoff all the tasks to the user
-	VBox taskSection = new VBox(10); // 10 px spacing between rows
+	taskSection = new VBox(10); // 10 px spacing between rows
 	taskSection.setPadding(new Insets(10)); // 10px padding around VBox
 	window.setCenter(taskSection);
 
@@ -191,13 +206,47 @@ public class ToDoView extends Application implements Observer {
     	// Currently ToDoTask is passed as an object. However whoever implements this method
     	// may change that. It might be easier to pass ToDoList and have methods in ToDoList
     	// ToDoTask that allow access to a task.
-		// TODO: visually change GUI here
+		// TODO: implement saving into update
 		if(newTask==null) {
-		    //TODO: MEANS SOMETHING WAS REMOVED. update gui
+			taskSection.getChildren().clear();
+			taskSection.getChildren().addAll(rows);
 		} else {  //means new task added
-		    ToDoTask task=(ToDoTask)newTask;
-		    //TODO: ADD NEW TASK TO GUI
+			
+			HBox h = new HBox();
+			Label label = new Label(((ToDoTask) newTask).getName());
+			Pane pane = new Pane();
+			Button button = new Button("Remove");
+			button.setId(""+ id);
+			id++;
+			h.getChildren().addAll(label, pane, button);
+			button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent arg0) {
+					// tell controller to update the board 
+					String index =((Node) arg0.getSource()).getId();
+					int ind	= Integer.parseInt(index);
+					System.out.print(ind);
+					for (int i = 0; i < id; i++) {
+						if (i > ind) {
+							String currID = rows.get(i).getChildren().get(2).getId();
+							int curr = Integer.parseInt(currID) - 1;
+							rows.get(i).getChildren().get(2).setId("" + curr);
+						}
+					}
+					rows.remove(ind);
+					id--;
+					control.removeTask(ind);
+				}
+			});
+			h.setStyle("-fx-background-color: white;");
+			label.setStyle("-fx-padding: 4 0 5 5;");
+			HBox.setHgrow(pane, Priority.ALWAYS);
+			rows.add(h);
+			ListView<HBox> list = new ListView<HBox>();
+			list.setItems(rows);
+			taskSection.getChildren().clear();
+			taskSection.getChildren().addAll(rows);
 		}
-
+    
     }
 }
