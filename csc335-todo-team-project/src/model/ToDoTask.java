@@ -43,5 +43,4 @@ public class ToDoTask implements Serializable{
 	    return this.name;
 	}
 	
-	
 }

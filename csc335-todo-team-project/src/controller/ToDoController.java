@@ -26,6 +26,9 @@ public class ToDoController {
 		this.model = model;
 	}
 	
+	public void loadView() {
+		model.loadView();
+	}
 	/**
 	 * Creates a new list.
 	 * 

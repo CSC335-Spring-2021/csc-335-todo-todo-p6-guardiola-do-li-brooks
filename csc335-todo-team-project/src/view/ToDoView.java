@@ -34,6 +34,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import model.ToDoList;
 import model.ToDoModel;
 import model.ToDoTask;
 
@@ -45,10 +46,9 @@ public class ToDoView extends Application implements Observer {
     private String curDescription;
     private String curDeadline;
     private String curImportant;
-    private ObservableList<String> events = FXCollections.observableArrayList();
-    private ObservableList<Button> edit = FXCollections.observableArrayList();
     private ObservableList<HBox> rows = FXCollections.observableArrayList();
     private int id = 0;
+    
     public void start(Stage stage) {
 	stage.setTitle("ToDo");
 	window = new BorderPane();
@@ -59,7 +59,7 @@ public class ToDoView extends Application implements Observer {
 	taskSection = new VBox(10); // 10 px spacing between rows
 	taskSection.setPadding(new Insets(10)); // 10px padding around VBox
 	window.setCenter(taskSection);
-
+	boolean load = false;
 	// Below code might be needed to change depending on how ToDoController is
 	// implemented.
 	// Creates the model to be used by the controller.
@@ -69,6 +69,7 @@ public class ToDoView extends Application implements Observer {
 		FileInputStream file = new FileInputStream("save.dat");
 		ObjectInputStream ois = new ObjectInputStream(file);
 		modelToBeSent = (ToDoModel) ois.readObject();
+		load = true;
 		ois.close();
 		file.close();
 	} catch (FileNotFoundException e) {
@@ -104,6 +105,11 @@ public class ToDoView extends Application implements Observer {
 
 	stage.setScene(scene);
 	stage.show();
+	
+	if (load) {
+		control.loadView();
+	}
+	load = false;
 }
 
     /**
@@ -210,8 +216,7 @@ public class ToDoView extends Application implements Observer {
 		if(newTask==null) {
 			taskSection.getChildren().clear();
 			taskSection.getChildren().addAll(rows);
-		} else {  //means new task added
-			
+		}	else {
 			HBox h = new HBox();
 			Label label = new Label(((ToDoTask) newTask).getName());
 			Pane pane = new Pane();
@@ -225,7 +230,6 @@ public class ToDoView extends Application implements Observer {
 					// tell controller to update the board 
 					String index =((Node) arg0.getSource()).getId();
 					int ind	= Integer.parseInt(index);
-					System.out.print(ind);
 					for (int i = 0; i < id; i++) {
 						if (i > ind) {
 							String currID = rows.get(i).getChildren().get(2).getId();

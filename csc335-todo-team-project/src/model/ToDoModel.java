@@ -66,4 +66,8 @@ public class ToDoModel implements Serializable {
 		oos.writeObject(this);
 		oos.close();
 	}
+	
+	public void loadView() {
+		lists.get(curList).loadView();
+	}
 }
