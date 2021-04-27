@@ -45,7 +45,6 @@ public class ToDoList extends Observable implements Serializable {
 
 	public void loadView() {
 		for (int i = 0; i < tasks.size(); i++) {
-			System.out.println(tasks.get(i));
 			setChanged();
 			notifyObservers((Object)tasks.get(i));
 		}

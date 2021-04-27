@@ -224,10 +224,11 @@ public class ToDoView extends Application implements Observer {
 			button.setId(""+ id);
 			id++;
 			h.getChildren().addAll(label, pane, button);
+			
 			button.setOnMouseClicked(new EventHandler<MouseEvent>() {
 				@Override
 				public void handle(MouseEvent arg0) {
-					// tell controller to update the board 
+					// tell controller to update the view
 					String index =((Node) arg0.getSource()).getId();
 					int ind	= Integer.parseInt(index);
 					for (int i = 0; i < id; i++) {
@@ -242,12 +243,14 @@ public class ToDoView extends Application implements Observer {
 					control.removeTask(ind);
 				}
 			});
+			
 			h.setStyle("-fx-background-color: white;");
 			label.setStyle("-fx-padding: 4 0 5 5;");
 			HBox.setHgrow(pane, Priority.ALWAYS);
 			rows.add(h);
 			ListView<HBox> list = new ListView<HBox>();
 			list.setItems(rows);
+			
 			taskSection.getChildren().clear();
 			taskSection.getChildren().addAll(rows);
 		}
