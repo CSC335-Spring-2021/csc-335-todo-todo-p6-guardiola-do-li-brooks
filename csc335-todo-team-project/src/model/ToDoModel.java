@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Observer;
 
 import view.ToDoView;
 
@@ -15,6 +16,7 @@ public class ToDoModel implements Serializable {
 	// Can change way to hold lists.
 	private ArrayList<ToDoList> lists;
 	private int curList;
+	private transient Observer observer;
 	
 	/**
 	 * Creates a List of ToDoLists that has only one ToDoList with no Tasks.
@@ -23,19 +25,88 @@ public class ToDoModel implements Serializable {
 	    this.lists = new ArrayList<ToDoList>();
 	    this.lists.add(new ToDoList());
 	    curList = 0;
+	    observer = null;
 	}
 	
-	public void addList() {
-	    //TODO: IMPLEMENT
+	/**
+	 * Adds a new empty list to the list of lists.
+	 * 
+	 * The view will be automatically added to this new list provided
+	 * that the addObserver method was used at least once before the calling
+	 * of this method.
+	 * 
+	 * @param name The name of the new ToDoList.
+	 */
+	public void addList(String name) {
+	    lists.add(new ToDoList(name));
+	    curList = lists.size()-1;
+	    lists.get(curList).addObserver(observer);
+	    loadView();
 	}
 	
-	public void switchList() {
-		//TODO: IMPLEMENT
+	/**
+	 * Deletes the current list.
+	 * 
+	 * This method does not check to make sure that there is more than 1 list
+	 * to be deleted. That is the responsibility of whatever called this to
+	 * check to ensure that it is fine to delete.
+	 */
+	public void deleteList() {
+		int toBeRemoved = curList;
+		// Switches to the next list because the current one is about to be
+		// removed.
+		nextList();
+		lists.remove(toBeRemoved);
+	}
+	
+	/**
+	 * Iterates to the next list. Will loop back to the start if there is no
+	 * next list.
+	 */
+	public void nextList() {
+		if (curList + 1 >= lists.size()) {
+			// Case where list should loop back to beginning
+			curList = 0;
+		} else {
+			curList++;
+		}
+		loadView();
+	}
+	
+	/**
+	 * Iterates to the previous list. Will loop to the end of the lists if this
+	 * function is called when the curList is the first list.
+	 */
+	public void prevList() {
+		if (curList - 1 < 0) {
+			// Case where list should loop to the end
+			curList = lists.size()-1;
+		} else {
+			curList--;
+		}
+		loadView();
+	}
+	
+	/**
+	 * @return True if the model holds more than one list currently.
+	 */
+	public boolean moreThanOneList() {
+		return lists.size() > 1;
+	}
+	
+	/**
+	 * Renames the current list to the given name and then notifies
+	 * the view that the list has been renamed.
+	 * 
+	 * @param name The new name of the list.
+	 */
+	public void renameList(String name) {
+		lists.get(curList).renameList(name);
+		loadView();
 	}
 	
 	public void addTask(String name, String description, String deadline, 
 			String importance) { 
-		//assuming only one list. always adds to index 0 for now.
 	    //TODO Later: CHECK DEADLINE AND IMPORTANCE VALIDITY BEFORE ENTERING MODEL.
 	    //deadline and importance are ignored and uninitialized for now.
 	    if(lists.size() > 0) {
@@ -45,14 +116,30 @@ public class ToDoModel implements Serializable {
 	    }
 	}
 	
+	
 	public void removeTask(int index) {
 	    this.lists.get(curList).removeTask(index);
 	}
 	
+	
+	
+	/**
+	 * Adds an Observer to all of the lists held in the model.
+	 * 
+	 * Will also store the Observer so that this model can add this
+	 * Observer to any newly created lists.
+	 * 
+	 * @param view The Observer.
+	 */
 	@SuppressWarnings("deprecation")
-	public void addObserver(ToDoView view) {
-	    lists.get(curList).addObserver(view);
+	public void addObserver(Observer view) {
+		observer = view;
+		
+		for (int i = 0; i < lists.size(); i++) {
+			lists.get(i).addObserver(observer);
+		}
 	}
+	
 	
 	/**
 	 * Saves this controller which houses all the lists for the ToDo lists
@@ -67,6 +154,9 @@ public class ToDoModel implements Serializable {
 		oos.close();
 	}
 	
+	/**
+	 * Loads the current List.
+	 */
 	public void loadView() {
 		lists.get(curList).loadView();
 	}

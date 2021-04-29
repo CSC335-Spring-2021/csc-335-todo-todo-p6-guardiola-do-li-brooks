@@ -1,23 +1,19 @@
 package controller;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.util.ArrayList;
-import model.ToDoList;
+import java.util.Observer;
+
 import model.ToDoModel;
-import model.ToDoTask;
-import view.ToDoView;
+
 
 public class ToDoController {
 	private ToDoModel model;
 	
 	/**
 	 * Creates a ToDoController from the given ToDoModel.
+	 * 
+	 * Note: View must use the method addObserver after this method in order
+	 * for it to become an Observer of the first list.
 	 * 
 	 * @param model The ToDoModel which will store the data for the ToDoList
 	 *              and its tasks.
@@ -26,19 +22,66 @@ public class ToDoController {
 		this.model = model;
 	}
 	
+	/**
+	 * Loads the current List into view.
+	 */
 	public void loadView() {
 		model.loadView();
 	}
+	
 	/**
-	 * Creates a new list.
+	 * Creates a new list and switches to it.
 	 * 
-	 * @param view The GUI view that will be the observer for the list.
+	 * Note: addObserver method must be used after this method in order for the
+	 * view to become an Observer of the newly created list.
+	 * 
+	 * @param name The name of the new list.
 	 */
-	public void addList(ToDoView view) {
-	    //TODO: IMPLEMENT Note: Whenever this function is called
-		// should call addObserver to add the view to the new list.
-		// Or it can be done in the view. If done in view, parameter
-		// for this method is unecessary.
+	public void addList(String name) {
+	    model.addList(name);
+	}
+	
+	/**
+	 * Renames the current list to the given name.
+	 * 
+	 * @param name The given name.
+	 */
+	public void renameList(String name) {
+		model.renameList(name);
+	}
+	
+	/**
+	 * Deletes the current list.
+	 * 
+	 * In this program it is not possible to delete the current list
+	 * if the current list is the only list. Boolean is used so view
+	 * can recognize a failed delete due to there only being one list.
+	 * 
+	 * @return True if the list was successfully deleted. False if the
+	 *         list was not able to be deleted because the current list
+	 *         is the only list.
+	 */
+	public boolean deleteList() {
+		if (!model.moreThanOneList()) {
+			return false; // Case where current list should not be deleted.
+		}
+		model.deleteList();
+		
+		return true;
+	}
+	
+	/**
+	 * Iterates to the next list.
+	 */
+	public void nextList() {
+		model.nextList();
+	}
+	
+	/**
+	 * Iterates to the previous list.
+	 */
+	public void prevList() {
+		model.prevList();
 	}
 	
 	/**
@@ -76,7 +119,7 @@ public class ToDoController {
 	 * 
 	 * @param view The GUI view that will be the observer.
 	 */
-	public void addObserver(ToDoView view) {
+	public void addObserver(Observer view) {
 	    model.addObserver(view);
 	}
 	
