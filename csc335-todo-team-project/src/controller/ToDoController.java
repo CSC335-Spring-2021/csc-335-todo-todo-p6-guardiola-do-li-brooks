@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 import java.util.Observer;
 
+import javafx.scene.control.Alert;
 import model.ToDoModel;
 
 
@@ -97,13 +98,22 @@ public class ToDoController {
 		// TODO: Must have a way to check that deadline is a valid date
 		// and that Importance is valid. Currently both are not really
 		// implemented.
-	    if(!deadline.equals("") && deadline.split("/").length!=3) {
-		System.err.println("Enter date with format mm/dd/year");  //TODO: USE EXCEPTIONS???
+	    if(name.equals("")) {
+		name="unnamed task";
+	    }
+	    if(deadline.equals("mm/dd/year")) {
+		deadline="";
+	    }
+	    else if(!deadline.equals("") && deadline.split("/").length!=3) {
+		Alert error = new Alert(Alert.AlertType.INFORMATION);
+		error.setTitle("ERROR");
+		error.setHeaderText("Invalid Date Entered");
+		error.setContentText("Use Format 'mm/dd/year'.");
+		error.showAndWait();
 		return;
 	    }
-	    if(!importance.equals("") && !(importance.equals("yes") || importance.equals("no"))) {
-		System.err.println("Importance must be 'yes' or 'no'.");
-		return;
+	    if(location.equals("Name/Address")) {
+		location="";
 	    }
 	    model.addTask(name, description, deadline, importance,location);
 	}

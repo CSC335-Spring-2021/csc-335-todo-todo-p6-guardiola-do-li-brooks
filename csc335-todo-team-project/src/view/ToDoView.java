@@ -22,6 +22,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -347,8 +348,11 @@ public class ToDoView extends Application implements Observer {
 		    // to set importance here. Have them set it in main window?
 		    Label importance = new Label("Important: ");
 		    TextField importanceInput = new TextField("yes/no");
-		    window2.add(importance, 0, 3);
-		    window2.add(importanceInput, 1, 3);
+		    CheckBox importanceBox=new CheckBox("Important");
+		    window2.add(importanceBox, 0, 3);
+		    importanceBox.setSelected(false);
+		    
+		    //window2.add(importanceInput, 1, 3);      LEFTOVER FROM STRING IMPLEMENTATION
 		    
 		    //sets up area for user to input the location for the new task
 		    Label location = new Label("Location: ");
@@ -360,7 +364,7 @@ public class ToDoView extends Application implements Observer {
 		    Button enter = new Button("Create New Task");
 		    window2.add(enter, 1, 5);
 	
-		    Scene scene2 = new Scene(window2, 250, 300);
+		    Scene scene2 = new Scene(window2, 500, 300);
 	
 		    Stage stage2 = new Stage();
 		    stage2.setTitle("New Task");
@@ -374,9 +378,14 @@ public class ToDoView extends Application implements Observer {
 					String curName = nameInput.getText();
 					String curDescription = descriptionInput.getText();
 					String curDeadline = deadlineInput.getText();
-					String curImportant = importanceInput.getText();
+					String curImportant;
+					if(importanceBox.isSelected()) {
+					    curImportant="Important!!!";
+					}
+					else {
+					    curImportant="";
+					}					
 					String curLocation = locationInput.getText();
-					// TODO: curDeadline and curImportant not implemented currently.
 					control.addTask(curName, curDescription, curDeadline, curImportant,curLocation);
 					
 					stage2.close();
@@ -423,7 +432,7 @@ public class ToDoView extends Application implements Observer {
     				int ind	= Integer.parseInt(index);
     				for (int i = 0; i < id; i++) {
     					if (i > ind) {
-    						String currID = rows.get(i).getChildren().get(2).getId();
+    						String currID = rows.get(i).getChildren().get(6).getId();
     						int curr = Integer.parseInt(currID) - 1;
     						rows.get(i).getChildren().get(2).setId("" + curr);
     					}
