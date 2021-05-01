@@ -55,9 +55,9 @@ public class ToDoList extends Observable implements Serializable {
     	return name;
     }
 
-    public void addTask(String taskName, String description, String deadline, String importance) {
+    public void addTask(String taskName, String description, String deadline, String importance,String location) {
 		if (taskName != null) {
-		    ToDoTask newTask=new ToDoTask(taskName,description);
+		    ToDoTask newTask=new ToDoTask(taskName,description,deadline,importance,location);
 		    this.tasks.add(newTask);  //TODO: IMPLEMENT DEADLINE AND IMPORTANCE FIELDS (additional constructors)
 		    loadView();
 		} else {

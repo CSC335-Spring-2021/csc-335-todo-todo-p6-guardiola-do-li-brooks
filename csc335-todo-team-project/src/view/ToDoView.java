@@ -312,7 +312,7 @@ public class ToDoView extends Application implements Observer {
 		    GridPane window2 = new GridPane();
 		    // Sets up 2nd window, so that there is enough space for labels
 		    // and textfield
-		    for (int i = 0; i < 5; i++) {
+		    for (int i = 0; i <= 5; i++) {
 				RowConstraints row = new RowConstraints();
 				row.setPercentHeight(25);
 				window2.getRowConstraints().add(row);
@@ -338,7 +338,7 @@ public class ToDoView extends Application implements Observer {
 		    
 		    // Sets up area for user to input deadline date of New Task
 		    Label deadline = new Label("Deadline: ");
-		    TextField deadlineInput = new TextField("m/d/yr");
+		    TextField deadlineInput = new TextField("mm/dd/year");
 		    window2.add(deadline, 0, 2);
 		    window2.add(deadlineInput, 1, 2);
 		    
@@ -349,10 +349,16 @@ public class ToDoView extends Application implements Observer {
 		    TextField importanceInput = new TextField("yes/no");
 		    window2.add(importance, 0, 3);
 		    window2.add(importanceInput, 1, 3);
+		    
+		    //sets up area for user to input the location for the new task
+		    Label location = new Label("Location: ");
+		    TextField locationInput = new TextField("Name/Address");
+		    window2.add(location, 0, 4);
+		    window2.add(locationInput, 1, 4);
 	
 		    // Sets up button to close the window and create the new task
 		    Button enter = new Button("Create New Task");
-		    window2.add(enter, 1, 4);
+		    window2.add(enter, 1, 5);
 	
 		    Scene scene2 = new Scene(window2, 250, 300);
 	
@@ -369,8 +375,9 @@ public class ToDoView extends Application implements Observer {
 					String curDescription = descriptionInput.getText();
 					String curDeadline = deadlineInput.getText();
 					String curImportant = importanceInput.getText();
+					String curLocation = locationInput.getText();
 					// TODO: curDeadline and curImportant not implemented currently.
-					control.addTask(curName, curDescription, curDeadline, curImportant);
+					control.addTask(curName, curDescription, curDeadline, curImportant,curLocation);
 					
 					stage2.close();
 				}
@@ -396,14 +403,18 @@ public class ToDoView extends Application implements Observer {
     	for (int i = 0; i < ((ToDoList) newList).amountTasks(); i++) {
     		ToDoTask newTask = ((ToDoList) newList).getTask(i);
     		
-    		HBox h = new HBox();
+    		HBox h = new HBox(5);
     		Label label = new Label(((ToDoTask) newTask).getName());
     		Pane pane = new Pane();
     		Button button = new Button("Remove");
     		button.setId(""+ id);
     		id++;
-    		h.getChildren().addAll(label, pane, button);
-    			
+    		Label description=new Label(((ToDoTask) newTask).getDescription());
+    		Label deadline=new Label(((ToDoTask)newTask).getDeadline());
+    		Label importance=new Label(((ToDoTask)newTask).getImportance());
+    		Label location=new Label(((ToDoTask)newTask).getLocation());
+    		h.getChildren().addAll(label, pane,description,deadline,importance,location, button);
+
     		button.setOnMouseClicked(new EventHandler<MouseEvent>() {
     			@Override
     			public void handle(MouseEvent arg0) {

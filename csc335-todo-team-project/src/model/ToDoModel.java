@@ -106,11 +106,11 @@ public class ToDoModel implements Serializable {
 	}
 	
 	public void addTask(String name, String description, String deadline, 
-			String importance) { 
+			String importance,String location) { 
 	    //TODO Later: CHECK DEADLINE AND IMPORTANCE VALIDITY BEFORE ENTERING MODEL.
 	    //deadline and importance are ignored and uninitialized for now.
 	    if(lists.size() > 0) {
-	    	lists.get(curList).addTask(name, description, deadline, importance);
+	    	lists.get(curList).addTask(name, description, deadline, importance,location);
 	    } else {
 	    	System.out.println("THIS LIST IS EMPTY");
 	    }

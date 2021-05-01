@@ -93,11 +93,19 @@ public class ToDoController {
 	 * @param importance Indicates whether the task is important or not.
 	 */
 	public void addTask(String name, String description, String deadline, 
-			String importance) { 
+			String importance,String location) { 
 		// TODO: Must have a way to check that deadline is a valid date
 		// and that Importance is valid. Currently both are not really
 		// implemented.
-		model.addTask(name, description, deadline, importance);
+	    if(!deadline.equals("") && deadline.split("/").length!=3) {
+		System.err.println("Enter date with format mm/dd/year");  //TODO: USE EXCEPTIONS???
+		return;
+	    }
+	    if(!importance.equals("") && !(importance.equals("yes") || importance.equals("no"))) {
+		System.err.println("Importance must be 'yes' or 'no'.");
+		return;
+	    }
+	    model.addTask(name, description, deadline, importance,location);
 	}
 	
 	/**

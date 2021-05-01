@@ -13,7 +13,8 @@ public class ToDoTask implements Serializable{
 	private String name;
 	private String description;
 	private String deadline;  //leaving as string for now
-	private boolean important;
+	private String important;
+	private String location;
     
 	public ToDoTask() {
 	    this.name = "untitled task";
@@ -25,9 +26,12 @@ public class ToDoTask implements Serializable{
 	    this.description = null;
 	}
 	
-	public ToDoTask(String name, String description) {
+	public ToDoTask(String name, String description,String deadline,String importance,String location) {
 	    this.name = name;
 	    this.description = description;
+	    this.deadline=deadline;
+	    this.important=importance;
+	    this.location=location;
 	    //System.out.println("Name:"+this.name+"\nDescription:"+this.description);  //TESTING PURPOSES
 	}
 	
@@ -41,6 +45,19 @@ public class ToDoTask implements Serializable{
 	
 	public String getName() {
 	    return this.name;
+	}
+	
+	public String getDescription() {
+	    return this.description;
+	}
+	public String getDeadline() {
+	    return this.deadline;
+	}
+	public String getImportance() {
+	    return this.important;
+	}
+	public String getLocation(){
+	    return this.location;
 	}
 	
 }
