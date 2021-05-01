@@ -412,6 +412,45 @@ public class ToDoView extends Application implements Observer {
 		}
 
     }
+    private class importanceHandler implements EventHandler<ActionEvent> {
+
+		@Override
+		public void handle(ActionEvent arg0) {
+			String currID = ((CheckBox) arg0.getSource()).getId();
+			int curr = Integer.parseInt(currID);
+			if (((CheckBox) arg0.getSource()).isSelected()) {
+				control.changeImportance("Important!!!", curr);
+			}
+			else {
+				control.changeImportance("", curr);
+			}
+		}
+    }
+    private class completionHandler implements EventHandler<ActionEvent> {
+
+		@Override
+		public void handle(ActionEvent arg0) {
+			String currID = ((CheckBox) arg0.getSource()).getId();
+			int curr = Integer.parseInt(currID);
+			if (((CheckBox) arg0.getSource()).isSelected()) {
+				control.changeCompletion(true, curr);
+			}
+			else {
+				control.changeCompletion(false, curr);
+			}
+		}
+    }
+    
+    private void checkboxHelper(String important, boolean complete, CheckBox c1, CheckBox c2) {
+    	if (complete) {
+    		c1.setSelected(true);
+    	}
+    	if (important != "") {
+    		c2.setSelected(true);
+    	}
+  
+    	return;
+    }
     
     /**
      * Updates the view with the passed Object.
@@ -464,14 +503,24 @@ public class ToDoView extends Application implements Observer {
     		Label label = new Label(((ToDoTask) newTask).getName());
     		Pane pane = new Pane();
     		Button button = new Button("Remove");
+    		CheckBox c1 = new CheckBox("Complete");
+    		CheckBox c2 = new CheckBox("Important");
+    		c1.setId("" + id);
+    		c2.setId("" + id);
+    		checkboxHelper(newTask.getImportance(), newTask.getCompletion(), c1, c2);
     		button.setId(""+ id);
     		id++;
     		Label description=new Label(((ToDoTask) newTask).getDescription());
     		Label deadline=new Label(((ToDoTask)newTask).getDeadline());
     		Label importance=new Label(((ToDoTask)newTask).getImportance());
     		Label location=new Label(((ToDoTask)newTask).getLocation());
-    		h.getChildren().addAll(label, pane,description,deadline,importance,location, button);
-
+    		h.getChildren().addAll(label, pane,description,deadline,importance,location, c1, c2, button);
+    		
+    		EventHandler<ActionEvent> completionHandler = new completionHandler();
+    		EventHandler<ActionEvent> importanceHandler = new importanceHandler();
+    		c1.setOnAction(completionHandler);
+    		c2.setOnAction(importanceHandler);
+    		
     		button.setOnMouseClicked(new EventHandler<MouseEvent>() {
     			@Override
     			public void handle(MouseEvent arg0) {
@@ -480,9 +529,11 @@ public class ToDoView extends Application implements Observer {
     				int ind	= Integer.parseInt(index);
     				for (int i = 0; i < id; i++) {
     					if (i > ind) {
-    						String currID = rows.get(i).getChildren().get(6).getId();
+    						String currID = rows.get(i).getChildren().get(8).getId();
     						int curr = Integer.parseInt(currID) - 1;
-    						rows.get(i).getChildren().get(2).setId("" + curr);
+    						rows.get(i).getChildren().get(6).setId("" + curr);
+    						rows.get(i).getChildren().get(7).setId("" + curr);
+    						rows.get(i).getChildren().get(8).setId("" + curr);
     					}
     				}
     				rows.remove(ind);

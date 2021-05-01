@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observer;
 
 import view.ToDoView;
@@ -171,5 +172,17 @@ public class ToDoModel implements Serializable {
 	 */
 	public void loadView() {
 		lists.get(curList).loadView();
+	}
+
+	public void changeImportance(String importance, int curr) {
+		lists.get(curList).getTask(curr).setImportance(importance);
+		loadView();
+	}
+
+	public void changeCompletion(boolean complete, int curr) {
+		System.out.print(complete);
+		System.out.print(curr);
+		lists.get(curList).getTask(curr).setCompletion(complete);
+		loadView();
 	}
 }

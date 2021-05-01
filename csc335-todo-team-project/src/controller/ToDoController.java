@@ -136,9 +136,15 @@ public class ToDoController {
 	 * @param task The ToDoTask to be removed.
 	 */
 	public void removeTask(int index) {
-		// It might be better to send the name of the task to be deleted
-		// and have the model remove the task.
 	    model.removeTask(index);
+	}
+	
+	public void changeImportance(String important, int curr) {
+		model.changeImportance(important, curr);
+	}
+	
+	public void changeCompletion(boolean complete, int curr) {
+		model.changeCompletion(complete, curr);
 	}
 	
 	/**

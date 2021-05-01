@@ -15,6 +15,7 @@ public class ToDoTask implements Serializable{
 	private String deadline;  //leaving as string for now
 	private String important;
 	private String location;
+    private boolean complete = false;
     
 	public ToDoTask() {
 	    this.name = "untitled task";
@@ -60,4 +61,13 @@ public class ToDoTask implements Serializable{
 	    return this.location;
 	}
 	
+	public boolean getCompletion() {
+		return this.complete;
+	}
+	public void setImportance(String importance) {
+		this.important = importance;
+	}
+	public void setCompletion(boolean complete) {
+		this.complete = complete;
+	}
 }
