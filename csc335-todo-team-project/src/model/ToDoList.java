@@ -12,17 +12,20 @@ public class ToDoList extends Observable implements Serializable {
     private static final long serialVersionUID = 1L;
     private ArrayList<ToDoTask> tasks;
     private String name;
+    private String color;
     
     /**
-     * Creates a ToDoList with the name List 1.
+     * Creates a ToDoList with the name List 1 and the color gray.
      */
     public ToDoList() {
     	this.tasks = new ArrayList<ToDoTask>();
-    	name = "List 1";
+    	this.name = "List 1";
+    	this.color = "beige";
     }
     
     /**
-     * Creates a ToDoList with the given name.
+     * Creates a ToDoList with the given name. List is automatically colored
+     * biege.
      * 
      * If given name is empty then the list will be automatically
      * named unamed list.
@@ -36,6 +39,23 @@ public class ToDoList extends Observable implements Serializable {
     	} else {
     		this.name = name;
     	}
+    	this.color = "beige";
+    }
+    
+    /**
+     * @return The color of the list.
+     */
+    public String getColor() {
+    	return color;
+    }
+    
+    /**
+     * Changes the list's color to the given one.
+     * 
+     * @param color The new color.
+     */
+    public void setColor(String color) {
+    	this.color = color;
     }
     
     /**
@@ -60,18 +80,13 @@ public class ToDoList extends Observable implements Serializable {
 		    ToDoTask newTask=new ToDoTask(taskName,description,deadline,importance,location);
 		    this.tasks.add(newTask);  //TODO: IMPLEMENT DEADLINE AND IMPORTANCE FIELDS (additional constructors)
 		    loadView();
-		} else {
-		    System.out.println("***TASK NAME IS NULL. ENTER VALID NAME"); // for debugging
 		}
-
     }
 
     public void removeTask(int index) {
     	boolean taskSeen = this.tasks.remove(index) != null;
     	if (!taskSeen) {
     		System.out.println("***Task entered is not in the To-Do List"); // for debugging
-    	}else {
-    		loadView();
     	}
     }
     

@@ -29,6 +29,16 @@ public class ToDoModel implements Serializable {
 	}
 	
 	/**
+	 * Changes the currentList color to the specified color.
+	 * 
+	 * @param color The color the list is changing to.
+	 */
+	public void changeColor(String color) {
+		lists.get(curList).setColor(color);
+		loadView();
+	}
+	
+	/**
 	 * Adds a new empty list to the list of lists.
 	 * 
 	 * The view will be automatically added to this new list provided
@@ -111,6 +121,7 @@ public class ToDoModel implements Serializable {
 	    //deadline and importance are ignored and uninitialized for now.
 	    if(lists.size() > 0) {
 	    	lists.get(curList).addTask(name, description, deadline, importance,location);
+	    	loadView();
 	    } else {
 	    	System.out.println("THIS LIST IS EMPTY");
 	    }
@@ -119,6 +130,7 @@ public class ToDoModel implements Serializable {
 	
 	public void removeTask(int index) {
 	    this.lists.get(curList).removeTask(index);
+	    loadView();
 	}
 	
 	

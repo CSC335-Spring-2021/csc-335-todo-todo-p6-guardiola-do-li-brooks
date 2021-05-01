@@ -25,9 +25,21 @@ public class ToDoController {
 	
 	/**
 	 * Loads the current List into view.
+	 * 
+	 * Must be used after the controller was created in order to load
+	 * the data into the view correctly. 
 	 */
 	public void loadView() {
 		model.loadView();
+	}
+	
+	/**
+	 * Changes the list color to the given one.
+	 * 
+	 * @param color The new list color.
+	 */
+	public void changeColor(String color) {
+		model.changeColor(color);
 	}
 	
 	/**

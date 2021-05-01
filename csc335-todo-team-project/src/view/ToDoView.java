@@ -23,6 +23,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -47,6 +48,7 @@ public class ToDoView extends Application implements Observer {
     private BorderPane window; 
     private VBox taskSection;
     private Label listName;
+    private ChoiceBox<String> changeColor;
     private int id;
     
     public void start(Stage stage) {
@@ -62,7 +64,6 @@ public class ToDoView extends Application implements Observer {
 		taskSection = new VBox(10); // 10 px spacing between rows
 		taskSection.setPadding(new Insets(10)); // 10px padding around VBox
 		window.setCenter(taskSection);
-		boolean load = false;
 	
 		// Creates the model to be used by the controller.
 		ToDoModel modelToBeSent = null;
@@ -71,7 +72,6 @@ public class ToDoView extends Application implements Observer {
 			FileInputStream file = new FileInputStream("save.dat");
 			ObjectInputStream ois = new ObjectInputStream(file);
 			modelToBeSent = (ToDoModel) ois.readObject();
-			load = true;
 			ois.close();
 			file.close();
 		} catch (FileNotFoundException e) {
@@ -96,6 +96,7 @@ public class ToDoView extends Application implements Observer {
 		// Sets up the bottom of the window which controls the current list
 		// and allows user to create new lists or delete the current list.
 		GridPane listSection = new GridPane();
+		listSection.setPadding(new Insets(10));
 		for (int i = 0; i < 3; i++) {
 			RowConstraints row = new RowConstraints();
 			row.setPercentHeight(50);
@@ -139,6 +140,23 @@ public class ToDoView extends Application implements Observer {
 		EventHandler<ActionEvent> listDeleteHandler = new DeleteListHandler();
 		deleteList.setOnAction(listDeleteHandler);
 		listSection.add(deleteList, 2, 1);
+		// Adds the change color button
+		changeColor = new ChoiceBox<String>();
+		changeColor.getItems().add("List Color: Beige");
+		changeColor.getItems().add("List Color: Blue");
+		changeColor.getItems().add("List Color: Gray");
+		changeColor.getItems().add("List Color: Orange");
+		changeColor.getItems().add("List Color: Pink");
+		changeColor.getItems().add("List Color: Red");
+		changeColor.getItems().add("List Color: Tan");
+		changeColor.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				String[] color = ((String) changeColor.getValue()).split(" ");
+				control.changeColor(color[2].toLowerCase());
+			}
+		});
+		listSection.add(changeColor, 1, 2);
 		// Makes it so the list switch/add/remove/rename stuff is at bottom of
 		// window.
 		window.setBottom(listSection);
@@ -159,10 +177,7 @@ public class ToDoView extends Application implements Observer {
 		stage.setScene(scene);
 		stage.show();
 		
-		if (load) {
-			control.loadView();
-		}
-		load = false;
+		control.loadView();
     }
     
     /**
@@ -407,6 +422,39 @@ public class ToDoView extends Application implements Observer {
     	ObservableList<HBox> rows = FXCollections.observableArrayList();
     	taskSection.getChildren().clear();
     	id = 0;
+    	
+    	// Sets the color of the list.
+    	switch (((ToDoList) newList).getColor()) {
+    		case "blue":
+    			taskSection.setStyle("-fx-background-color: lightblue;");
+    			changeColor.getSelectionModel().select(1);
+    			break;
+    		case "gray":
+    			taskSection.setStyle("-fx-background-color: slategrey;");
+    			changeColor.getSelectionModel().select(2);
+    			break;
+    		case "orange":
+    			taskSection.setStyle("-fx-background-color: orange;");
+    			changeColor.getSelectionModel().select(3);
+    			break;
+    		case "pink":
+    			taskSection.setStyle("-fx-background-color: pink;");
+    			changeColor.getSelectionModel().select(4);
+    			break;
+    		case "red":
+    			taskSection.setStyle("-fx-background-color: crimson;");
+    			changeColor.getSelectionModel().select(5);
+    			break;
+    		case "tan":
+    			taskSection.setStyle("-fx-background-color: tan;");
+    			changeColor.getSelectionModel().select(6);
+    			break;
+    		default:
+    			// By default list is colored beige.
+    			taskSection.setStyle("-fx-background-color: beige;");
+    			changeColor.getSelectionModel().select(0);
+    			break;
+    	}
     	
     	// For loop sets up all the tasks within the model.
     	for (int i = 0; i < ((ToDoList) newList).amountTasks(); i++) {
