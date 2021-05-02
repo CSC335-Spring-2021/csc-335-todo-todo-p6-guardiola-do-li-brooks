@@ -10,6 +10,9 @@ import java.util.Observable;
 import java.util.Observer;
 
 import controller.ToDoController;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.*;
 import model.ToDoList;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -20,13 +23,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -86,13 +82,32 @@ public class ToDoView extends Application implements Observer {
 		}
 		control = new ToDoController(modelToBeSent);
 		control.addObserver(view);
-	
+
+		HBox topPanel = new HBox(5);
+		topPanel.setPadding(new Insets(5));
+		window.setTop(topPanel);
+
 		// Buttons to be used to add tasks
 		Button addTask = new Button("Add Task");
-		window.setTop(addTask);
 		// Event handler when button is clicked.
 		EventHandler<ActionEvent> taskHandler = new NewTaskHandler();
 		addTask.setOnAction(taskHandler);
+
+		// ComboBox to choose sort criteria
+		Label sortTip = new Label("Sort by: ");
+		ComboBox<String> sort = new ComboBox<>();
+		sort.getItems().addAll("Name","Deadline","Importance","Create time");
+//		sort.getSelectionModel().select(0);
+		sort.setEditable(false);
+		sort.setVisibleRowCount(4);
+		sort.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				control.sort(newValue);
+			}
+		});
+
+		topPanel.getChildren().addAll(sortTip, sort, addTask);
 		
 		// Sets up the bottom of the window which controls the current list
 		// and allows user to create new lists or delete the current list.
@@ -521,11 +536,11 @@ public class ToDoView extends Application implements Observer {
     		checkboxHelper(newTask.getImportance(), newTask.getCompletion(), c1, c2);
     		button.setId(""+ id);
     		id++;
+    		
     		Label description=new Label(((ToDoTask) newTask).getDescription());
     		Label deadline=new Label(((ToDoTask)newTask).getDeadline());
-    		Label importance=new Label(((ToDoTask)newTask).getImportance());
     		Label location=new Label(((ToDoTask)newTask).getLocation());
-    		h.getChildren().addAll(label, pane,description,deadline,importance,location, c1, c2, button);
+    		h.getChildren().addAll(label, pane,description,deadline,location, c1, c2, button);
     		
     		EventHandler<ActionEvent> completionHandler = new completionHandler();
     		EventHandler<ActionEvent> importanceHandler = new importanceHandler();
@@ -540,11 +555,11 @@ public class ToDoView extends Application implements Observer {
     				int ind	= Integer.parseInt(index);
     				for (int i = 0; i < id; i++) {
     					if (i > ind) {
-    						String currID = rows.get(i).getChildren().get(8).getId();
+    						String currID = rows.get(i).getChildren().get(7).getId();
     						int curr = Integer.parseInt(currID) - 1;
+    						rows.get(i).getChildren().get(5).setId("" + curr);
     						rows.get(i).getChildren().get(6).setId("" + curr);
     						rows.get(i).getChildren().get(7).setId("" + curr);
-    						rows.get(i).getChildren().get(8).setId("" + curr);
     					}
     				}
     				rows.remove(ind);
@@ -568,4 +583,3 @@ public class ToDoView extends Application implements Observer {
     }
     	
 }
-

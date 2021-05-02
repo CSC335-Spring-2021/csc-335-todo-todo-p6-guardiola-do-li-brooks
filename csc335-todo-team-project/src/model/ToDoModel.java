@@ -180,9 +180,25 @@ public class ToDoModel implements Serializable {
 	}
 
 	public void changeCompletion(boolean complete, int curr) {
-		System.out.print(complete);
-		System.out.print(curr);
 		lists.get(curList).getTask(curr).setCompletion(complete);
+		loadView();
+	}
+
+	public void sort(String sortBy){
+		switch (sortBy) {
+			case "Name":
+				lists.get(curList).sortByName();
+				break;
+			case "Deadline":
+				lists.get(curList).sortByDeadline();
+				break;
+			case "Importance":
+				lists.get(curList).sortByImportance();
+				break;
+			case "Create time":
+				lists.get(curList).sortByCreateTime();
+				break;
+		}
 		loadView();
 	}
 }

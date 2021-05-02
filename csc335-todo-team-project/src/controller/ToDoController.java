@@ -167,4 +167,9 @@ public class ToDoController {
 	public void saveLists() throws IOException {
 		model.saveLists();
 	}
+
+	public void sort(String sortBy){
+		model.sort(sortBy);
+	}
 }
+
