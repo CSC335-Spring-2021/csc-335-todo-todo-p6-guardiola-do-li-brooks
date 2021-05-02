@@ -470,32 +470,39 @@ public class ToDoView extends Application implements Observer {
     	switch (((ToDoList) newList).getColor()) {
     		case "blue":
     			taskSection.setStyle("-fx-background-color: lightblue;");
-    			changeColor.getSelectionModel().select(1);
+    			if (startup)
+    				changeColor.getSelectionModel().select(1);
     			break;
     		case "gray":
     			taskSection.setStyle("-fx-background-color: slategrey;");
-    			changeColor.getSelectionModel().select(2);
+    			if (startup)
+    				changeColor.getSelectionModel().select(2);
     			break;
     		case "orange":
     			taskSection.setStyle("-fx-background-color: orange;");
-    			changeColor.getSelectionModel().select(3);
+    			if (startup)
+    				changeColor.getSelectionModel().select(3);
     			break;
     		case "pink":
     			taskSection.setStyle("-fx-background-color: pink;");
-    			changeColor.getSelectionModel().select(4);
+    			if (startup)
+    				changeColor.getSelectionModel().select(4);
     			break;
     		case "red":
     			taskSection.setStyle("-fx-background-color: crimson;");
-    			changeColor.getSelectionModel().select(5);
+    			if (startup)
+    				changeColor.getSelectionModel().select(5);
     			break;
     		case "tan":
     			taskSection.setStyle("-fx-background-color: tan;");
-    			changeColor.getSelectionModel().select(6);
+    			if (startup)
+    				changeColor.getSelectionModel().select(6);
     			break;
     		default:
     			// By default list is colored beige.
     			taskSection.setStyle("-fx-background-color: beige;");
-    			changeColor.getSelectionModel().select(0);
+    			if (startup)
+    				changeColor.getSelectionModel().select(0);
     			break;
     	}
     	
