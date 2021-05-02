@@ -180,8 +180,6 @@ public class ToDoModel implements Serializable {
 	}
 
 	public void changeCompletion(boolean complete, int curr) {
-		System.out.print(complete);
-		System.out.print(curr);
 		lists.get(curList).getTask(curr).setCompletion(complete);
 		loadView();
 	}

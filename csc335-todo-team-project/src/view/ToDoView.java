@@ -521,11 +521,11 @@ public class ToDoView extends Application implements Observer {
     		checkboxHelper(newTask.getImportance(), newTask.getCompletion(), c1, c2);
     		button.setId(""+ id);
     		id++;
+    		
     		Label description=new Label(((ToDoTask) newTask).getDescription());
     		Label deadline=new Label(((ToDoTask)newTask).getDeadline());
-    		Label importance=new Label(((ToDoTask)newTask).getImportance());
     		Label location=new Label(((ToDoTask)newTask).getLocation());
-    		h.getChildren().addAll(label, pane,description,deadline,importance,location, c1, c2, button);
+    		h.getChildren().addAll(label, pane,description,deadline,location, c1, c2, button);
     		
     		EventHandler<ActionEvent> completionHandler = new completionHandler();
     		EventHandler<ActionEvent> importanceHandler = new importanceHandler();
@@ -540,11 +540,11 @@ public class ToDoView extends Application implements Observer {
     				int ind	= Integer.parseInt(index);
     				for (int i = 0; i < id; i++) {
     					if (i > ind) {
-    						String currID = rows.get(i).getChildren().get(8).getId();
+    						String currID = rows.get(i).getChildren().get(7).getId();
     						int curr = Integer.parseInt(currID) - 1;
+    						rows.get(i).getChildren().get(5).setId("" + curr);
     						rows.get(i).getChildren().get(6).setId("" + curr);
     						rows.get(i).getChildren().get(7).setId("" + curr);
-    						rows.get(i).getChildren().get(8).setId("" + curr);
     					}
     				}
     				rows.remove(ind);
