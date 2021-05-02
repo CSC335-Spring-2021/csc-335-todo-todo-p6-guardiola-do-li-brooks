@@ -50,11 +50,12 @@ public class ToDoView extends Application implements Observer {
     private Label listName;
     private ChoiceBox<String> changeColor;
     private int id;
+    private boolean startup;
     
     public void start(Stage stage) {
     	// Sets view to this view. This is what is passed to addObserver
     	view = this;
-    	
+    	startup = true;
 		stage.setTitle("ToDo");
 		window = new BorderPane();
 		// If anyone else wants a different window size mention it.
@@ -152,8 +153,10 @@ public class ToDoView extends Application implements Observer {
 		changeColor.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				String[] color = ((String) changeColor.getValue()).split(" ");
-				control.changeColor(color[2].toLowerCase());
+				if (!startup) {
+					String[] color = ((String) changeColor.getValue()).split(" ");
+					control.changeColor(color[2].toLowerCase());
+				}
 			}
 		});
 		listSection.add(changeColor, 1, 2);
@@ -178,6 +181,7 @@ public class ToDoView extends Application implements Observer {
 		stage.show();
 		
 		control.loadView();
+		startup = false;
     }
     
     /**
