@@ -1,21 +1,17 @@
 package model;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Observer;
-
-import view.ToDoView;
 
 public class ToDoModel implements Serializable {
 	private static final long serialVersionUID = 1L;
 	// Can change way to hold lists.
 	private ArrayList<ToDoList> lists;
+
 	private int curList;
 	private transient Observer observer;
 	
@@ -184,6 +180,24 @@ public class ToDoModel implements Serializable {
 		loadView();
 	}
 
+	public void sort(String sortBy){
+		switch (sortBy) {
+			case "Name":
+				lists.get(curList).sortByName();
+				break;
+			case "Deadline":
+				lists.get(curList).sortByDeadline();
+				break;
+			case "Importance":
+				lists.get(curList).sortByImportance();
+				break;
+			case "Create time":
+				lists.get(curList).sortByCreateTime();
+				break;
+		}
+		loadView();
+	}
+
 	public void hideCompletedTask(){
 		lists.get(curList).hideCompleted();
 		loadView();
@@ -193,7 +207,7 @@ public class ToDoModel implements Serializable {
 		lists.get(curList).showCompleted();
 		loadView();
 	}
-	
+
 	public void moveUp(int pos){
 		lists.get(curList).moveUp(pos);
 		loadView();

@@ -1,6 +1,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 
 //TODO: IMPLEMENT FIELDS AND FUNCTIONALITY FOR FIELDS: deadline, important
@@ -13,6 +14,7 @@ public class ToDoTask implements Serializable{
 	private String name;
 	private String description;
 	private String deadline;  //leaving as string for now
+	private Date createTime;
 	private String important;
 	private String location;
     private boolean complete = false;
@@ -33,6 +35,7 @@ public class ToDoTask implements Serializable{
 	    this.deadline=deadline;
 	    this.important=importance;
 	    this.location=location;
+	    this.createTime=new Date();
 	    //System.out.println("Name:"+this.name+"\nDescription:"+this.description);  //TESTING PURPOSES
 	}
 	
@@ -69,5 +72,9 @@ public class ToDoTask implements Serializable{
 	}
 	public void setCompletion(boolean complete) {
 		this.complete = complete;
+	}
+
+	public Date getCreateTime(){
+		return this.createTime;
 	}
 }

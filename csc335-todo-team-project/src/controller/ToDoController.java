@@ -133,7 +133,7 @@ public class ToDoController {
 	/**
 	 * Removes the given task from the current viewable list.
 	 * 
-	 * @param task The ToDoTask to be removed.
+	 * @param index The ToDoTask to be removed.
 	 */
 	public void removeTask(int index) {
 	    model.removeTask(index);
@@ -168,6 +168,10 @@ public class ToDoController {
 		model.saveLists();
 	}
 
+	public void sort(String sortBy){
+		model.sort(sortBy);
+	}
+
 	public void hideCompletedTask(){
 		model.hideCompletedTask();
 	}
@@ -175,7 +179,7 @@ public class ToDoController {
 	public void showCompletedTask(){
 		model.showCompletedTask();
 	}
-	
+
 	public void moveUp(int pos){
 		model.moveUp(pos);
 	}
