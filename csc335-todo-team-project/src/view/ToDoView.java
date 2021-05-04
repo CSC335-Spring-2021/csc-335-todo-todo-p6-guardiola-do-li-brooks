@@ -410,10 +410,6 @@ public class ToDoView extends Application implements Observer {
 		    window2.add(deadlineInput, 1, 2);
 		    
 		    // Sets up area for user to input importance
-		    // Maybe make this a button or just don't have the user able
-		    // to set importance here. Have them set it in main window?
-		    Label importance = new Label("Important: ");
-		    TextField importanceInput = new TextField("yes/no");
 		    CheckBox importanceBox=new CheckBox("Important");
 		    window2.add(importanceBox, 0, 3);
 		    importanceBox.setSelected(false);

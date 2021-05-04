@@ -107,9 +107,6 @@ public class ToDoController {
 	 */
 	public void addTask(String name, String description, String deadline, 
 			String importance,String location) { 
-		// TODO: Must have a way to check that deadline is a valid date
-		// and that Importance is valid. Currently both are not really
-		// implemented.
 	    if(name.equals("")) {
 	    	name = "unnamed task";
 	    }
