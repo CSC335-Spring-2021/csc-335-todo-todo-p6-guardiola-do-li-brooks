@@ -18,6 +18,8 @@ public class ToDoList extends Observable implements Serializable {
     private ArrayList<ToDoTask> completedTasks;
     private String name;
     private String color;
+    private String currentSorting;
+    private boolean hideComplete;
     
     /**
      * Creates a ToDoList with the name List 1 and the color gray.
@@ -26,6 +28,8 @@ public class ToDoList extends Observable implements Serializable {
     	this.tasks = new ArrayList<ToDoTask>();
     	this.name = "List 1";
     	this.color = "beige";
+    	this.currentSorting = "Custom";
+    	this.hideComplete = false;
     }
     
     /**
@@ -45,6 +49,8 @@ public class ToDoList extends Observable implements Serializable {
     		this.name = name;
     	}
     	this.color = "beige";
+    	this.currentSorting = "Custom";
+    	this.hideComplete = false;
     }
     
     /**
@@ -82,9 +88,8 @@ public class ToDoList extends Observable implements Serializable {
 
     public void addTask(String taskName, String description, String deadline, String importance,String location) {
 		if (taskName != null) {
-		    ToDoTask newTask=new ToDoTask(taskName,description,deadline,importance,location);
-		    this.tasks.add(newTask);  //TODO: IMPLEMENT DEADLINE AND IMPORTANCE FIELDS (additional constructors)
-		    loadView();
+		    ToDoTask newTask = new ToDoTask(taskName,description,deadline,importance,location);
+		    this.tasks.add(newTask);
 		}
     }
 
@@ -136,6 +141,7 @@ public class ToDoList extends Observable implements Serializable {
         String timeStr1;
         String timeStr2;
         ToDoTask temp;
+        currentSorting = "Deadline";
 
         for(int i=0; i<tasks.size()-1; i++){
             for(int j=i+1; j<tasks.size();j++){
@@ -161,11 +167,12 @@ public class ToDoList extends Observable implements Serializable {
      * taskList sort by importance
      */
     public void sortByImportance(){
-
         ArrayList<ToDoTask> important = new ArrayList<>();
         ArrayList<ToDoTask> unimportant = new ArrayList<>();
 
         sortByName();
+        // Must be placed after or else currentSorting will be set to Name
+        currentSorting = "Importance";
 
         for (ToDoTask task : tasks){
             if (task.getImportance().contains("Important!!!")){
@@ -184,16 +191,15 @@ public class ToDoList extends Observable implements Serializable {
      * taskList sort by name
      */
     public void sortByName(){
-
+    	currentSorting = "Name";
         Collections.sort(tasks,new TaskNameCompare());
-
     }
 
     /**
      * taskList sort by create time
      */
     public void sortByCreateTime(){
-
+    	currentSorting = "Create time";
         Date d1,d2;
         ToDoTask temp;
         for(int i=0; i<tasks.size()-1; i++){
@@ -216,7 +222,7 @@ public class ToDoList extends Observable implements Serializable {
      * hide completed task
      */
     public void hideCompleted (){
-
+    	hideComplete = true;
         if (completedTasks==null){
             completedTasks = new ArrayList<>();
         }
@@ -233,18 +239,18 @@ public class ToDoList extends Observable implements Serializable {
      * show completed task
      */
     public void showCompleted(){
-
+    	hideComplete = true;
         tasks.addAll(completedTasks);
         completedTasks.clear();
-
     }
 
     /**
-     * move the task up
-     * @param pos
+     * Move the task up
+     * 
+     * @param pos The index position of the Task to be moved up.
      */
     public void moveUp(int pos){
-
+    	currentSorting = "Custom";
         ToDoTask temp;
         if (pos!=0){
             temp = tasks.get(pos);
@@ -255,11 +261,12 @@ public class ToDoList extends Observable implements Serializable {
     }
 
     /**
-     * move the task to top
-     * @param pos
+     * Move the task to top
+     * 
+     * @param pos The index position of the Task to be moved to the top.
      */
     public void moveTop(int pos){
-
+    	currentSorting = "Custom";
         ToDoTask temp;
         if (pos!=0){
             temp = tasks.get(pos);
@@ -267,5 +274,24 @@ public class ToDoList extends Observable implements Serializable {
             tasks.add(0, temp);
         }
 
+    }
+    
+    /**
+     * Returns how the list is currently sorted.
+     * 
+     * Possible sortings are Name, Deadline, Importance, Create time, Custom
+     * 
+     * @return The way the list is being sorted currently.
+     */
+    public String getCurrentSorting() {
+    	return currentSorting;
+    }
+    
+    /**
+     * @return True if the completed tasks are currently being hidden.
+     *         False otherwise.
+     */
+    public boolean getHideComplete() {
+    	return hideComplete;
     }
 }

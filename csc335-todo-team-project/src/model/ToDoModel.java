@@ -11,7 +11,6 @@ public class ToDoModel implements Serializable {
 	private static final long serialVersionUID = 1L;
 	// Can change way to hold lists.
 	private ArrayList<ToDoList> lists;
-
 	private int curList;
 	private transient Observer observer;
 	
@@ -112,19 +111,31 @@ public class ToDoModel implements Serializable {
 		loadView();
 	}
 	
+	/**
+	 * Adds a new task with the given parameters.
+	 * 
+	 * @param name The name of the task.
+	 * @param description The description/notes about the task.
+	 * @param deadline The deadline for the task.
+	 * @param importance Indication of whether the task is important or not.
+	 * @param location The location of the task.
+	 */
 	public void addTask(String name, String description, String deadline, 
 			String importance,String location) { 
-	    //TODO Later: CHECK DEADLINE AND IMPORTANCE VALIDITY BEFORE ENTERING MODEL.
-	    //deadline and importance are ignored and uninitialized for now.
 	    if(lists.size() > 0) {
 	    	lists.get(curList).addTask(name, description, deadline, importance,location);
-	    	loadView();
+	    	// Sorts the newly added list.
+	    	sort(lists.get(curList).getCurrentSorting());
 	    } else {
-	    	System.out.println("THIS LIST IS EMPTY");
+	    	System.out.println("THERE IS NO LIST TO ADD TO");
 	    }
 	}
 	
-	
+	/**
+	 * Removes the task at the given index.
+	 * 
+	 * @param index The task's index.
+	 */
 	public void removeTask(int index) {
 	    this.lists.get(curList).removeTask(index);
 	    loadView();
@@ -169,17 +180,49 @@ public class ToDoModel implements Serializable {
 	public void loadView() {
 		lists.get(curList).loadView();
 	}
-
+	
+	/**
+	 * Changes the task at the position curr's completion status.
+	 *  
+	 * @param importance The new task importance status.
+	 * @param curr The index of the task to have their importance status
+	 *             changed.
+	 */
 	public void changeImportance(String importance, int curr) {
 		lists.get(curList).getTask(curr).setImportance(importance);
-		loadView();
+		if (lists.get(curList).getCurrentSorting().equals("Importance")) {
+			// Must sort the new Important task.
+			sort("Importance");
+		} else {
+			loadView();
+		}
 	}
-
+	
+	/**
+	 * Changes the task at the position curr's completion status.
+	 *  
+	 * @param complete The new task completion status.
+	 * @param curr The index of the task to have their completion status
+	 *             changed.
+	 */
 	public void changeCompletion(boolean complete, int curr) {
 		lists.get(curList).getTask(curr).setCompletion(complete);
-		loadView();
+		if (lists.get(curList).getHideComplete()) {
+			// Means this task must be now hidden.
+			hideCompletedTask();
+		} else {
+			loadView();
+		}
 	}
-
+	
+	/**
+	 * Sorts the current list by the given sorting.
+	 * 
+	 * Possible ways that the list can be sorted by:
+	 * Name, Deadline, Importance, Create Time, Custom
+	 * 
+	 * @param sortBy The given sorting as String.
+	 */
 	public void sort(String sortBy){
 		switch (sortBy) {
 			case "Name":
@@ -194,6 +237,10 @@ public class ToDoModel implements Serializable {
 			case "Create time":
 				lists.get(curList).sortByCreateTime();
 				break;
+			case "Custom":
+				// Does not sort as it indicates it is sorting by
+				// Move up and move down.
+				break;
 		}
 		loadView();
 	}
@@ -205,7 +252,8 @@ public class ToDoModel implements Serializable {
 
 	public void showCompletedTask(){
 		lists.get(curList).showCompleted();
-		loadView();
+		// Must resort the current list with the newly shown tasks.
+		sort(lists.get(curList).getCurrentSorting());
 	}
 
 	public void moveUp(int pos){

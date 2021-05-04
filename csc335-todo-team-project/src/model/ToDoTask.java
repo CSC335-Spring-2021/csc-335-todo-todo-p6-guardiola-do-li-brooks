@@ -15,27 +15,30 @@ public class ToDoTask implements Serializable{
 	private String description;
 	private String deadline;  //leaving as string for now
 	private Date createTime;
-	private String important;
 	private String location;
-    private boolean complete = false;
+	private String important;
+    private boolean complete;
     
 	public ToDoTask() {
 	    this.name = "untitled task";
 	    this.description = null;
+	    this.complete = false;
 	}
 	
 	public ToDoTask(String name) {
 	    this.name = name;
 	    this.description = null;
+	    this.complete = false;
 	}
 	
 	public ToDoTask(String name, String description,String deadline,String importance,String location) {
 	    this.name = name;
 	    this.description = description;
-	    this.deadline=deadline;
-	    this.important=importance;
-	    this.location=location;
-	    this.createTime=new Date();
+	    this.deadline = deadline;
+	    this.important = importance;
+	    this.location = location;
+	    this.createTime = new Date();
+	    this.complete = false;
 	    //System.out.println("Name:"+this.name+"\nDescription:"+this.description);  //TESTING PURPOSES
 	}
 	

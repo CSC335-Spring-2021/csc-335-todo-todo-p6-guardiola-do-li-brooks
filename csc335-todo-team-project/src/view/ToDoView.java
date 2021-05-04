@@ -48,17 +48,25 @@ public class ToDoView extends Application implements Observer {
     private VBox taskSection;
     private Label listName;
     private ChoiceBox<String> changeColor;
+    private ComboBox<String> sort;
+    private CheckBox ck;
     private int id;
     private boolean startup;
+    private boolean handle;
     
     public void start(Stage stage) {
     	// Sets view to this view. This is what is passed to addObserver
     	view = this;
+    	// Sets startup to true this indicates that a new list is being loaded in.
     	startup = true;
+    	// Sets handle to false, so later on when first choice is set up by
+    	// computer it doesn't actually do what the button is supposed to.
+    	// Important to prevent errors.
+    	handle = false;
 		stage.setTitle("ToDo");
 		window = new BorderPane();
 		// If anyone else wants a different window size mention it.
-		Scene scene = new Scene(window, 600, 600); // 400 px wide, 600 px tall
+		Scene scene = new Scene(window, 800, 600); // 800 px wide, 600 px tall
 	
 		// VBox will be used to showoff all the tasks to the user
 		taskSection = new VBox(10); // 10 px spacing between rows
@@ -85,7 +93,8 @@ public class ToDoView extends Application implements Observer {
 		}
 		control = new ToDoController(modelToBeSent);
 		control.addObserver(view);
-
+		
+		// topPanel holds all the buttons on top.
 		HBox topPanel = new HBox(5);
 		topPanel.setPadding(new Insets(5));
 		window.setTop(topPanel);
@@ -98,28 +107,31 @@ public class ToDoView extends Application implements Observer {
 
 		// ComboBox to choose sort criteria
 		Label sortTip = new Label("Sort by: ");
-		ComboBox<String> sort = new ComboBox<>();
-		sort.getItems().addAll("Name","Deadline","Importance","Create time");
-//		sort.getSelectionModel().select(0);
+		sort = new ComboBox<>();
+		sort.getItems().addAll("Name","Deadline","Importance","Create time","Custom");
 		sort.setEditable(false);
-		sort.setVisibleRowCount(4);
+		sort.setVisibleRowCount(5);
 		sort.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				control.sort(newValue);
+			public void changed(ObservableValue<? extends String> observable, 
+					String oldValue, String newValue) {
+				if (handle)
+					control.sort(newValue);
 			}
 		});
 
 		//completed task
-		CheckBox ck = new CheckBox("Hide Completed Task");
+		ck = new CheckBox("Hide Completed Task");
 		ck.setSelected(false);
 		ck.selectedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
-				if (ck.isSelected()){
-					control.hideCompletedTask();
-				}else {
-					control.showCompletedTask();
+				if (handle) {
+					if (ck.isSelected()){
+						control.hideCompletedTask();
+					} else {
+						control.showCompletedTask();
+					}
 				}
 			}
 		});
@@ -144,6 +156,7 @@ public class ToDoView extends Application implements Observer {
 		nextButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
+				startup = true;
 				control.nextList();
 			}
 		});
@@ -151,6 +164,7 @@ public class ToDoView extends Application implements Observer {
 		prevButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
+				startup = true;
 				control.prevList();
 			}
 		});
@@ -186,7 +200,7 @@ public class ToDoView extends Application implements Observer {
 		changeColor.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				if (!startup) {
+				if (handle) {
 					String[] color = ((String) changeColor.getValue()).split(" ");
 					control.changeColor(color[2].toLowerCase());
 				}
@@ -499,6 +513,8 @@ public class ToDoView extends Application implements Observer {
     	taskSection.getChildren().clear();
     	id = 0;
     	
+    	// Ensures that on startUp the button being selected doesn't do anything.
+    	handle = false;
     	// Sets the color of the list.
     	switch (((ToDoList) newList).getColor()) {
     		case "blue":
@@ -538,6 +554,42 @@ public class ToDoView extends Application implements Observer {
     				changeColor.getSelectionModel().select(0);
     			break;
     	}
+    	// Sets the sorting method choice.
+    	switch (((ToDoList) newList).getCurrentSorting()) {
+			case "Name":
+				if (startup)
+					sort.getSelectionModel().select(0);
+				break;
+			case "Deadline":
+				if (startup)
+					sort.getSelectionModel().select(1);
+				break;
+			case "Importance":
+				if (startup)
+					sort.getSelectionModel().select(2);
+				break;
+			case "Create time":
+				if (startup)
+					sort.getSelectionModel().select(3);
+				break;
+			default:
+				// Default sort is Custom
+				sort.getSelectionModel().select(4);
+				break;
+    	}
+    	// Determines what the hide completed checkbox when a new list is
+    	// loaded into the view.
+    	if (((ToDoList) newList).getHideComplete()) {
+    		if (startup)
+    			ck.setSelected(true);
+    	} else {
+    		if (startup)
+    			ck.setSelected(false);
+    	}
+    	// Ensures that program knows that not a startUp and that buttons
+    	// being clicked should handle things again.
+    	startup = false;
+    	handle = true;
     	
     	// For loop sets up all the tasks within the model.
     	for (int i = 0; i < ((ToDoList) newList).amountTasks(); i++) {

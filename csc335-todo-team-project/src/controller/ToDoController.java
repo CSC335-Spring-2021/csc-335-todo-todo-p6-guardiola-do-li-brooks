@@ -111,21 +111,21 @@ public class ToDoController {
 		// and that Importance is valid. Currently both are not really
 		// implemented.
 	    if(name.equals("")) {
-		name="unnamed task";
+	    	name = "unnamed task";
 	    }
 	    if(deadline.equals("mm/dd/year")) {
-		deadline="";
+	    	deadline = "";
 	    }
 	    else if(!deadline.equals("") && deadline.split("/").length!=3) {
-		Alert error = new Alert(Alert.AlertType.INFORMATION);
-		error.setTitle("ERROR");
-		error.setHeaderText("Invalid Date Entered");
-		error.setContentText("Use Format 'mm/dd/year'.");
-		error.showAndWait();
-		return;
+			Alert error = new Alert(Alert.AlertType.INFORMATION);
+			error.setTitle("ERROR");
+			error.setHeaderText("Invalid Date Entered");
+			error.setContentText("Use Format 'mm/dd/year'.");
+			error.showAndWait();
+			return;
 	    }
 	    if(location.equals("Name/Address")) {
-		location="";
+	    	location = "";
 	    }
 	    model.addTask(name, description, deadline, importance,location);
 	}
