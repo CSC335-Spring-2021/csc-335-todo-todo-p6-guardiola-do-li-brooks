@@ -276,6 +276,7 @@ public class ToDoView extends Application implements Observer {
 
 				@Override
 				public void handle(ActionEvent arg0) {
+					startup = true;
 					String curName = nameInput.getText();
 					control.addList(curName);
 					stage2.close();
