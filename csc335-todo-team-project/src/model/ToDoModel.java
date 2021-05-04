@@ -183,4 +183,22 @@ public class ToDoModel implements Serializable {
 		lists.get(curList).getTask(curr).setCompletion(complete);
 		loadView();
 	}
+
+	public void sort(String sortBy){
+		switch (sortBy) {
+			case "Name":
+				lists.get(curList).sortByName();
+				break;
+			case "Deadline":
+				lists.get(curList).sortByDeadline();
+				break;
+			case "Importance":
+				lists.get(curList).sortByImportance();
+				break;
+			case "Create time":
+				lists.get(curList).sortByCreateTime();
+				break;
+		}
+		loadView();
+	}
 }
