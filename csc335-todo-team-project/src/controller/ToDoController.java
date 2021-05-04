@@ -175,5 +175,12 @@ public class ToDoController {
 	public void showCompletedTask(){
 		model.showCompletedTask();
 	}
-}
+	
+	public void moveUp(int pos){
+		model.moveUp(pos);
+	}
 
+	public void moveTop(int pos){
+		model.moveTop(pos);
+	}
+}

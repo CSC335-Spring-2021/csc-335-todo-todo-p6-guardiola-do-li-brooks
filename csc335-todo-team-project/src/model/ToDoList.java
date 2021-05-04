@@ -120,11 +120,7 @@ public class ToDoList extends Observable implements Serializable {
 		notifyObservers(this);
 	}
 
-    /**
-     * hide completed task
-     */
     public void hideCompleted (){
-
         if (completedTasks==null){
             completedTasks = new ArrayList<>();
         }
@@ -134,18 +130,36 @@ public class ToDoList extends Observable implements Serializable {
             }
         }
         tasks.removeAll(completedTasks);
-
     }
 
     /**
      * show completed task
      */
     public void showCompleted(){
-
         tasks.addAll(completedTasks);
         completedTasks.clear();
-
     }
-	
-}
+    
+    public void moveUp(int pos){
+    	ToDoTask temp;
+        if (pos!=0){
+            temp = tasks.get(pos);
+            tasks.set(pos, tasks.get(pos-1));
+            tasks.set(pos-1, temp);
+        }
+    }
 
+    /**
+     * move the task to top
+     * @param pos
+     */
+    public void moveTop(int pos){
+        ToDoTask temp;
+        if (pos!=0){
+            temp = tasks.get(pos);
+            tasks.remove(pos);
+            tasks.add(0, temp);
+        }
+    }
+    
+}

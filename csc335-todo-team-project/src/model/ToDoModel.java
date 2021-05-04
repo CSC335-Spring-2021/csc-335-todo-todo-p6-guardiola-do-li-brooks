@@ -193,4 +193,14 @@ public class ToDoModel implements Serializable {
 		lists.get(curList).showCompleted();
 		loadView();
 	}
+	
+	public void moveUp(int pos){
+		lists.get(curList).moveUp(pos);
+		loadView();
+	}
+
+	public void moveTop(int pos){
+		lists.get(curList).moveTop(pos);
+		loadView();
+	}
 }
