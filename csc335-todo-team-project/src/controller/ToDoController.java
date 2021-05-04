@@ -168,8 +168,12 @@ public class ToDoController {
 		model.saveLists();
 	}
 
-	public void sort(String sortBy){
-		model.sort(sortBy);
+	public void hideCompletedTask(){
+		model.hideCompletedTask();
+	}
+
+	public void showCompletedTask(){
+		model.showCompletedTask();
 	}
 }
 

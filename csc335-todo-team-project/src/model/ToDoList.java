@@ -1,11 +1,7 @@
 package model;
 
 import java.io.Serializable;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.Observable;
 
 @SuppressWarnings("deprecation")
@@ -15,6 +11,7 @@ public class ToDoList extends Observable implements Serializable {
      */
     private static final long serialVersionUID = 1L;
     private ArrayList<ToDoTask> tasks;
+    private ArrayList<ToDoTask> completedTasks;
     private String name;
     private String color;
     
@@ -124,90 +121,31 @@ public class ToDoList extends Observable implements Serializable {
 	}
 
     /**
-     * taskList sort by deadline
+     * hide completed task
      */
-    public void sortByDeadline(){
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-        Date d1;
-        Date d2;
-        String timeStr1;
-        String timeStr2;
-        ToDoTask temp;
+    public void hideCompleted (){
 
-        for(int i=0; i<tasks.size()-1; i++){
-            for(int j=i+1; j<tasks.size();j++){
-                ParsePosition pos1 = new ParsePosition(0);
-                ParsePosition pos2 = new ParsePosition(0);
-                timeStr1 = tasks.get(i).getDeadline();
-                timeStr2 = tasks.get(j).getDeadline();
-                d1 = sdf.parse(timeStr1, pos1);
-                d2 = sdf.parse(timeStr2, pos2);
-                if (d2 == null){
-                    continue;
-                }else if (d1 == null || d2.before(d1)){
-                    temp = tasks.get(i);
-                    tasks.set(i, tasks.get(j));
-                    tasks.set(j, temp);
-                }
-            }
+        if (completedTasks==null){
+            completedTasks = new ArrayList<>();
         }
-
-    }
-
-    /**
-     * taskList sort by importance
-     */
-    public void sortByImportance(){
-
-        ArrayList<ToDoTask> important = new ArrayList<>();
-        ArrayList<ToDoTask> unimportant = new ArrayList<>();
-
-        sortByName();
-
         for (ToDoTask task : tasks){
-            if (task.getImportance().contains("Important!!!")){
-                important.add(task);
-            }else {
-                unimportant.add(task);
+            if (task.getCompletion()){
+                completedTasks.add(task);
             }
         }
-
-        tasks.clear();
-        tasks.addAll(important);
-        tasks.addAll(unimportant);
-    }
-
-    /**
-     * taskList sort by name
-     */
-    public void sortByName(){
-
-        Collections.sort(tasks,new TaskNameCompare());
+        tasks.removeAll(completedTasks);
 
     }
 
     /**
-     * taskList sort by create time
+     * show completed task
      */
-    public void sortByCreateTime(){
+    public void showCompleted(){
 
-        Date d1,d2;
-        ToDoTask temp;
-        for(int i=0; i<tasks.size()-1; i++){
-            for(int j=i+1; j<tasks.size();j++){
-                d1 = tasks.get(i).getCreateTime();
-                d2 = tasks.get(j).getCreateTime();
-                if (d2 == null){
-                    return;
-                }else if (d1 == null || d2.before(d1)){
-                    temp = tasks.get(i);
-                    tasks.set(i, tasks.get(j));
-                    tasks.set(j, temp);
-                }
-            }
-        }
+        tasks.addAll(completedTasks);
+        completedTasks.clear();
 
     }
-
+	
 }
 
