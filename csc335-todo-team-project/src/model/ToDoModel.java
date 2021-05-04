@@ -184,21 +184,13 @@ public class ToDoModel implements Serializable {
 		loadView();
 	}
 
-	public void sort(String sortBy){
-		switch (sortBy) {
-			case "Name":
-				lists.get(curList).sortByName();
-				break;
-			case "Deadline":
-				lists.get(curList).sortByDeadline();
-				break;
-			case "Importance":
-				lists.get(curList).sortByImportance();
-				break;
-			case "Create time":
-				lists.get(curList).sortByCreateTime();
-				break;
-		}
+	public void moveUp(int pos){
+		lists.get(curList).moveUp(pos);
+		loadView();
+	}
+
+	public void moveTop(int pos){
+		lists.get(curList).moveTop(pos);
 		loadView();
 	}
 }

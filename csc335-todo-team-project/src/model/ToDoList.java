@@ -1,11 +1,7 @@
 package model;
 
 import java.io.Serializable;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.Observable;
 
 @SuppressWarnings("deprecation")
@@ -124,90 +120,33 @@ public class ToDoList extends Observable implements Serializable {
 	}
 
     /**
-     * taskList sort by deadline
+     * move the task up
+     * @param pos
      */
-    public void sortByDeadline(){
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-        Date d1;
-        Date d2;
-        String timeStr1;
-        String timeStr2;
-        ToDoTask temp;
+    public void moveUp(int pos){
 
-        for(int i=0; i<tasks.size()-1; i++){
-            for(int j=i+1; j<tasks.size();j++){
-                ParsePosition pos1 = new ParsePosition(0);
-                ParsePosition pos2 = new ParsePosition(0);
-                timeStr1 = tasks.get(i).getDeadline();
-                timeStr2 = tasks.get(j).getDeadline();
-                d1 = sdf.parse(timeStr1, pos1);
-                d2 = sdf.parse(timeStr2, pos2);
-                if (d2 == null){
-                    continue;
-                }else if (d1 == null || d2.before(d1)){
-                    temp = tasks.get(i);
-                    tasks.set(i, tasks.get(j));
-                    tasks.set(j, temp);
-                }
-            }
+        ToDoTask temp;
+        if (pos!=0){
+            temp = tasks.get(pos);
+            tasks.set(pos, tasks.get(pos-1));
+            tasks.set(pos-1, temp);
         }
 
     }
 
     /**
-     * taskList sort by importance
+     * move the task to top
+     * @param pos
      */
-    public void sortByImportance(){
+    public void moveTop(int pos){
 
-        ArrayList<ToDoTask> important = new ArrayList<>();
-        ArrayList<ToDoTask> unimportant = new ArrayList<>();
-
-        sortByName();
-
-        for (ToDoTask task : tasks){
-            if (task.getImportance().contains("Important!!!")){
-                important.add(task);
-            }else {
-                unimportant.add(task);
-            }
-        }
-
-        tasks.clear();
-        tasks.addAll(important);
-        tasks.addAll(unimportant);
-    }
-
-    /**
-     * taskList sort by name
-     */
-    public void sortByName(){
-
-        Collections.sort(tasks,new TaskNameCompare());
-
-    }
-
-    /**
-     * taskList sort by create time
-     */
-    public void sortByCreateTime(){
-
-        Date d1,d2;
         ToDoTask temp;
-        for(int i=0; i<tasks.size()-1; i++){
-            for(int j=i+1; j<tasks.size();j++){
-                d1 = tasks.get(i).getCreateTime();
-                d2 = tasks.get(j).getCreateTime();
-                if (d2 == null){
-                    return;
-                }else if (d1 == null || d2.before(d1)){
-                    temp = tasks.get(i);
-                    tasks.set(i, tasks.get(j));
-                    tasks.set(j, temp);
-                }
-            }
+        if (pos!=0){
+            temp = tasks.get(pos);
+            tasks.remove(pos);
+            tasks.add(0, temp);
         }
 
     }
 
 }
-

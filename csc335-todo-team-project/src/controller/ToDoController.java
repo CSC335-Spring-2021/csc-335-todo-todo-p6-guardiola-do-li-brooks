@@ -168,8 +168,11 @@ public class ToDoController {
 		model.saveLists();
 	}
 
-	public void sort(String sortBy){
-		model.sort(sortBy);
+	public void moveUp(int pos){
+		model.moveUp(pos);
+	}
+
+	public void moveTop(int pos){
+		model.moveTop(pos);
 	}
 }
-
