@@ -41,9 +41,9 @@ public class ToDoTest implements Observer {
     	control.addTask("Task 2", "", "01/01/2006", "", "Name/Address");
     	ToDoTask task2 = list.getTask(1);
     	ToDoTask test2 = new ToDoTask("Task 2", "", "01/01/2006", "", "");
-    	control.addTask("", "", "05/25/2006", "", "");
+    	control.addTask("Task 3", "", "05/25/2006", "", "");
     	ToDoTask task3 = list.getTask(2);
-    	ToDoTask test3 = new ToDoTask("unnamed task", "", "05/25/2006", "", "");
+    	ToDoTask test3 = new ToDoTask("Task 3", "", "05/25/2006", "", "");
     	// Checks to ensure that the two extra tasks was successfully added.
     	assertEquals(test2.getName(), task2.getName());
     	assertEquals(test2.getDescription(), task2.getDescription());
