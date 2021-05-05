@@ -19,7 +19,7 @@ public class ToDoController {
      *              tasks.
      */
     public ToDoController(ToDoModel model) {
-	this.model = model;
+    	this.model = model;
     }
 
     /**
@@ -29,7 +29,7 @@ public class ToDoController {
      * the view correctly.
      */
     public void loadView() {
-	model.loadView();
+    	model.loadView();
     }
 
     /**
@@ -38,7 +38,7 @@ public class ToDoController {
      * @param color The new list color.
      */
     public void changeColor(String color) {
-	model.changeColor(color);
+    	model.changeColor(color);
     }
 
     /**
@@ -50,7 +50,7 @@ public class ToDoController {
      * @param name The name of the new list.
      */
     public void addList(String name) {
-	model.addList(name);
+    	model.addList(name);
     }
 
     /**
@@ -59,7 +59,7 @@ public class ToDoController {
      * @param name The given name.
      */
     public void renameList(String name) {
-	model.renameList(name);
+    	model.renameList(name);
     }
 
     /**
@@ -73,30 +73,30 @@ public class ToDoController {
      *         able to be deleted because the current list is the only list.
      */
     public boolean deleteList() {
-	if (!model.moreThanOneList()) {
-	    return false; // Case where current list should not be deleted.
-	}
-	model.deleteList();
+    	if (!model.moreThanOneList()) {
+    		return false; // Case where current list should not be deleted.
+    	}
+    	model.deleteList();
 
-	return true;
+    	return true;
     }
 
     /**
      * Iterates to the next list.
      */
     public void nextList() {
-	model.nextList();
+    	model.nextList();
     }
 
     /**
      * Iterates to the previous list.
      */
     public void prevList() {
-	model.prevList();
+    	model.prevList();
     }
     
     public void renameTask(String name,int pos) {
-	model.renameTask(name,pos);
+    	model.renameTask(name,pos);
     }
 
     /**
@@ -108,27 +108,27 @@ public class ToDoController {
      * @param importance  Indicates whether the task is important or not.
      */
     public void addTask(String name, String description, String deadline, String importance, String location) {
-	if (name.equals("")) {
-	    Alert error = new Alert(Alert.AlertType.INFORMATION);
-	    error.setTitle("ERROR");
-	    error.setHeaderText("No Name Entered");
-	    error.setContentText("Must Enter a Name");
-	    error.showAndWait();
-	    return;
-	}
-	String[] deadlineArr=deadline.split("/");
-	if (deadline.equals("mm/dd/year") || deadlineArr.length!=3) {
-	    Alert error = new Alert(Alert.AlertType.INFORMATION);
-	    error.setTitle("ERROR");
-	    error.setHeaderText("Invalid Date Entered");
-	    error.setContentText("Use Format 'mm/dd/year'.");
-	    error.showAndWait();
-	    return;
-	}
-	if (location.equals("Name/Address")) {
-	    location = "";
-	}
-	model.addTask(name, description, deadline, importance, location);
+    	if (name.equals("")) {
+    		Alert error = new Alert(Alert.AlertType.INFORMATION);
+    		error.setTitle("ERROR");
+    		error.setHeaderText("No Name Entered");
+    		error.setContentText("Must Enter a Name");
+    		error.showAndWait();
+    		return;
+    	}
+    	String[] deadlineArr=deadline.split("/");
+    	if (deadline.equals("mm/dd/year") || deadlineArr.length!=3) {
+    		Alert error = new Alert(Alert.AlertType.INFORMATION);
+    		error.setTitle("ERROR");
+    		error.setHeaderText("Invalid Date Entered");
+    		error.setContentText("Use Format 'mm/dd/year'.");
+    		error.showAndWait();
+    		return;
+    	}
+    	if (location.equals("Name/Address")) {
+    		location = "";
+    	}
+    	model.addTask(name, description, deadline, importance, location);
     }
 
     /**
@@ -137,15 +137,15 @@ public class ToDoController {
      * @param index The ToDoTask to be removed.
      */
     public void removeTask(int index) {
-	model.removeTask(index);
+    	model.removeTask(index);
     }
 
     public void changeImportance(String important, int curr) {
-	model.changeImportance(important, curr);
+    	model.changeImportance(important, curr);
     }
 
     public void changeCompletion(boolean complete, int curr) {
-	model.changeCompletion(complete, curr);
+    	model.changeCompletion(complete, curr);
     }
 
     /**
@@ -157,7 +157,7 @@ public class ToDoController {
      * @param view The GUI view that will be the observer.
      */
     public void addObserver(Observer view) {
-	model.addObserver(view);
+    	model.addObserver(view);
     }
 
     /**
@@ -166,7 +166,7 @@ public class ToDoController {
      * @throws IOException Means that the file was not able to be written to.
      */
     public void saveLists() throws IOException {
-	model.saveLists();
+    	model.saveLists();
     }
     
     /**
@@ -178,27 +178,27 @@ public class ToDoController {
      * @param sortBy The way the list will be sorted.
      */
     public void sort(String sortBy) {
-	model.sort(sortBy);
+    	model.sort(sortBy);
     }
 
     public void hideCompletedTask() {
-	model.hideCompletedTask();
+    	model.hideCompletedTask();
     }
 
     public void showCompletedTask() {
-	model.showCompletedTask();
+    	model.showCompletedTask();
     }
 
     public void moveUp(int pos) {
-	model.moveUp(pos);
+    	model.moveUp(pos);
     }
 
     public void moveTop(int pos) {
-	model.moveTop(pos);
+    	model.moveTop(pos);
     }
     
     //Added for JUnit testing
     public String getNameList() {
-	return model.getNameList();
+    	return model.getNameList();
     }
 }

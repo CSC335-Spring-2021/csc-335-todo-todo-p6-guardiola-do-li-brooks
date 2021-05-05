@@ -25,11 +25,11 @@ public class ToDoList extends Observable implements Serializable {
      * Creates a ToDoList with the name List 1 and the color gray.
      */
     public ToDoList() {
-	this.tasks = new ArrayList<ToDoTask>();
-	this.name = "List 1";
-	this.color = "beige";
-	this.currentSorting = "Custom";
-	this.hideComplete = false;
+    	this.tasks = new ArrayList<ToDoTask>();
+    	this.name = "List 1";
+    	this.color = "beige";
+    	this.currentSorting = "Custom";
+    	this.hideComplete = false;
     }
 
     /**
@@ -40,22 +40,18 @@ public class ToDoList extends Observable implements Serializable {
      * @param name The name of the list.
      */
     public ToDoList(String name) {
-	this.tasks = new ArrayList<ToDoTask>();
-	if (name.equals("")) {
-	    this.name = "unamed list";
-	} else {
-	    this.name = name;
-	}
-	this.color = "beige";
-	this.currentSorting = "Custom";
-	this.hideComplete = false;
+    	this.tasks = new ArrayList<ToDoTask>();
+    	this.name = name;
+    	this.color = "beige";
+    	this.currentSorting = "Custom";
+    	this.hideComplete = false;
     }
 
     /**
      * @return The color of the list.
      */
     public String getColor() {
-	return color;
+    	return color;
     }
 
     /**
@@ -64,7 +60,7 @@ public class ToDoList extends Observable implements Serializable {
      * @param color The new color.
      */
     public void setColor(String color) {
-	this.color = color;
+    	this.color = color;
     }
 
     /**
@@ -74,38 +70,38 @@ public class ToDoList extends Observable implements Serializable {
      * @param name The new name for the ToDoList.
      */
     public void renameList(String name) {
-	this.name = name;
+    	this.name = name;
     }
 
     /**
      * @return The name of the list.
      */
     public String getNameList() {
-	return name;
+    	return name;
     }
     
     public void renameTask(String name, int pos) {
-	ToDoTask temp=tasks.get(pos);
-	temp.rename(name);
+    	ToDoTask temp=tasks.get(pos);
+    	temp.rename(name);
     }
 
     public void addTask(String taskName, String description, String deadline, String importance, String location) {
-	ToDoTask newTask = new ToDoTask(taskName, description, deadline, importance, location);
-	this.tasks.add(newTask);
+    	ToDoTask newTask = new ToDoTask(taskName, description, deadline, importance, location);
+    	this.tasks.add(newTask);
     }
 
     public void removeTask(int index) {
-	boolean taskSeen = this.tasks.remove(index) != null;
-	if (!taskSeen) {
-	    System.out.println("***Task entered is not in the To-Do List"); // for debugging
-	}
+    	boolean taskSeen = this.tasks.remove(index) != null;
+    	if (!taskSeen) {
+    		System.out.println("***Task entered is not in the To-Do List"); // for debugging
+    	}
     }
 
     /**
      * @return The amount of tasks in the ToDoList.
      */
     public int amountTasks() {
-	return tasks.size();
+    	return tasks.size();
     }
 
     /**
@@ -118,15 +114,15 @@ public class ToDoList extends Observable implements Serializable {
      * @return The ToDoTask at the specified index.
      */
     public ToDoTask getTask(int index) {
-	return tasks.get(index);
+    	return tasks.get(index);
     }
 
     /**
      * Notifys all observers by passing this List to it.
      */
     public void loadView() {
-	setChanged();
-	notifyObservers(this);
+    	setChanged();
+    	notifyObservers(this);
     }
 
     /**
@@ -134,31 +130,31 @@ public class ToDoList extends Observable implements Serializable {
      * the higher the task will be placed on the list.
      */
     public void sortByDeadline() {
-	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-	Date d1;
-	Date d2;
-	String timeStr1;
-	String timeStr2;
-	ToDoTask temp;
-	currentSorting = "Deadline";
+    	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+    	Date d1;
+    	Date d2;
+    	String timeStr1;
+    	String timeStr2;
+    	ToDoTask temp;
+    	currentSorting = "Deadline";
 
-	for (int i = 0; i < tasks.size() - 1; i++) {
-	    for (int j = i + 1; j < tasks.size(); j++) {
-		ParsePosition pos1 = new ParsePosition(0);
-		ParsePosition pos2 = new ParsePosition(0);
-		timeStr1 = tasks.get(i).getDeadline();
-		timeStr2 = tasks.get(j).getDeadline();
-		d1 = sdf.parse(timeStr1, pos1);
-		d2 = sdf.parse(timeStr2, pos2);
-		if (d2 == null) {
-		    continue;
-		} else if (d1 == null || d2.before(d1)) {
-		    temp = tasks.get(i);
-		    tasks.set(i, tasks.get(j));
-		    tasks.set(j, temp);
-		}
-	    }
-	}
+    	for (int i = 0; i < tasks.size() - 1; i++) {
+    		for (int j = i + 1; j < tasks.size(); j++) {
+    			ParsePosition pos1 = new ParsePosition(0);
+    			ParsePosition pos2 = new ParsePosition(0);
+    			timeStr1 = tasks.get(i).getDeadline();
+    			timeStr2 = tasks.get(j).getDeadline();
+    			d1 = sdf.parse(timeStr1, pos1);
+    			d2 = sdf.parse(timeStr2, pos2);
+    			if (d2 == null) {
+    				continue;
+    			} else if (d1 == null || d2.before(d1)) {
+    				temp = tasks.get(i);
+    				tasks.set(i, tasks.get(j));
+    				tasks.set(j, temp);
+    			}
+    		}
+    	}
 
     }
 
@@ -167,32 +163,32 @@ public class ToDoList extends Observable implements Serializable {
      * important tasks will be higher on the list than Z important tasks)
      */
     public void sortByImportance() {
-	ArrayList<ToDoTask> important = new ArrayList<>();
-	ArrayList<ToDoTask> unimportant = new ArrayList<>();
+    	ArrayList<ToDoTask> important = new ArrayList<>();
+    	ArrayList<ToDoTask> unimportant = new ArrayList<>();
 
-	sortByName();
-	// Must be placed after or else currentSorting will be set to Name
-	currentSorting = "Importance";
+    	sortByName();
+    	// Must be placed after or else currentSorting will be set to Name
+    	currentSorting = "Importance";
 
-	for (ToDoTask task : tasks) {
-	    if (task.getImportance().contains("Important!!!")) {
-		important.add(task);
-	    } else {
-		unimportant.add(task);
-	    }
-	}
+    	for (ToDoTask task : tasks) {
+    		if (task.getImportance().contains("Important!!!")) {
+    			important.add(task);
+    		} else {
+    			unimportant.add(task);
+    		}
+    	}
 
-	tasks.clear();
-	tasks.addAll(important);
-	tasks.addAll(unimportant);
+    	tasks.clear();
+    	tasks.addAll(important);
+    	tasks.addAll(unimportant);
     }
 
     /**
      * Sorts the list of tasks by the name alphabetically.
      */
     public void sortByName() {
-	currentSorting = "Name";
-	Collections.sort(tasks, new TaskNameCompare());
+    	currentSorting = "Name";
+    	Collections.sort(tasks, new TaskNameCompare());
     }
 
     /**
@@ -201,22 +197,22 @@ public class ToDoList extends Observable implements Serializable {
      * list.
      */
     public void sortByCreateTime() {
-	currentSorting = "Create time";
-	Date d1, d2;
-	ToDoTask temp;
-	for (int i = 0; i < tasks.size() - 1; i++) {
-	    for (int j = i + 1; j < tasks.size(); j++) {
-		d1 = tasks.get(i).getCreateTime();
-		d2 = tasks.get(j).getCreateTime();
-		if (d2 == null) {
-		    return;
-		} else if (d1 == null || d2.before(d1)) {
-		    temp = tasks.get(i);
-		    tasks.set(i, tasks.get(j));
-		    tasks.set(j, temp);
-		}
-	    }
-	}
+    	currentSorting = "Create time";
+    	Date d1, d2;
+    	ToDoTask temp;
+    	for (int i = 0; i < tasks.size() - 1; i++) {
+    		for (int j = i + 1; j < tasks.size(); j++) {
+    			d1 = tasks.get(i).getCreateTime();
+    			d2 = tasks.get(j).getCreateTime();
+    			if (d2 == null) {
+    				return;
+    			} else if (d1 == null || d2.before(d1)) {
+    				temp = tasks.get(i);
+    				tasks.set(i, tasks.get(j));
+    				tasks.set(j, temp);
+    			}
+    		}
+    	}
 
     }
 
@@ -224,16 +220,16 @@ public class ToDoList extends Observable implements Serializable {
      * hide completed task
      */
     public void hideCompleted() {
-	hideComplete = true;
-	if (completedTasks == null) {
-	    completedTasks = new ArrayList<>();
-	}
-	for (ToDoTask task : tasks) {
-	    if (task.getCompletion()) {
-		completedTasks.add(task);
-	    }
-	}
-	tasks.removeAll(completedTasks);
+    	hideComplete = true;
+    	if (completedTasks == null) {
+    		completedTasks = new ArrayList<>();
+    	}
+    	for (ToDoTask task : tasks) {
+    		if (task.getCompletion()) {
+    			completedTasks.add(task);
+    		}
+    	}
+    	tasks.removeAll(completedTasks);
 
     }
 
@@ -241,9 +237,9 @@ public class ToDoList extends Observable implements Serializable {
      * show completed task
      */
     public void showCompleted() {
-	hideComplete = false;
-	tasks.addAll(completedTasks);
-	completedTasks.clear();
+    	hideComplete = false;
+    	tasks.addAll(completedTasks);
+    	completedTasks.clear();
     }
 
     /**
@@ -252,13 +248,13 @@ public class ToDoList extends Observable implements Serializable {
      * @param pos The index position of the Task to be moved up.
      */
     public void moveUp(int pos) {
-	currentSorting = "Custom";
-	ToDoTask temp;
-	if (pos != 0) {
-	    temp = tasks.get(pos);
-	    tasks.set(pos, tasks.get(pos - 1));
-	    tasks.set(pos - 1, temp);
-	}
+    	currentSorting = "Custom";
+    	ToDoTask temp;
+    	if (pos != 0) {
+    		temp = tasks.get(pos);
+    		tasks.set(pos, tasks.get(pos - 1));
+    		tasks.set(pos - 1, temp);
+    	}	
 
     }
 
@@ -268,13 +264,13 @@ public class ToDoList extends Observable implements Serializable {
      * @param pos The index position of the Task to be moved to the top.
      */
     public void moveTop(int pos) {
-	currentSorting = "Custom";
-	ToDoTask temp;
-	if (pos != 0) {
-	    temp = tasks.get(pos);
-	    tasks.remove(pos);
-	    tasks.add(0, temp);
-	}
+    	currentSorting = "Custom";
+    	ToDoTask temp;
+    	if (pos != 0) {
+    		temp = tasks.get(pos);
+    		tasks.remove(pos);
+	    	tasks.add(0, temp);
+    	}
 
     }
 
@@ -286,7 +282,7 @@ public class ToDoList extends Observable implements Serializable {
      * @return The way the list is being sorted currently.
      */
     public String getCurrentSorting() {
-	return currentSorting;
+    	return currentSorting;
     }
 
     /**
@@ -294,6 +290,6 @@ public class ToDoList extends Observable implements Serializable {
      *         otherwise.
      */
     public boolean getHideComplete() {
-	return hideComplete;
+    	return hideComplete;
     }
 }

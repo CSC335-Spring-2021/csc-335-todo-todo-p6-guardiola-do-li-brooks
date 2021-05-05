@@ -66,12 +66,12 @@ public class ToDoTest implements Observer {
      */
     @Test
     void testRenameTask() {
-	// Creates an empty ToDoModel
-	ToDoModel model = new ToDoModel();
-	// Creates a controller using that model and adds this test as an observer.
-	ToDoController control = new ToDoController(model);
-	control.addObserver(this);
-	control.addTask("Task 1", "First", "01/01/2005", "Important!!!", "Tucson");
+    	// Creates an empty ToDoModel
+    	ToDoModel model = new ToDoModel();
+		// Creates a controller using that model and adds this test as an observer.
+		ToDoController control = new ToDoController(model);
+		control.addObserver(this);
+		control.addTask("Task 1", "First", "01/01/2005", "Important!!!", "Tucson");
     	control.addTask("Task 2", "Second", "02/02/2005", "Important!!!", "Tucson");
     	control.addTask("Task 3", "Third", "03/03/2005", "Important!!!", "Tucson");
     	control.renameTask("First Task",0);
@@ -151,11 +151,11 @@ public class ToDoTest implements Observer {
      */
     @Test
     void testNextList() {
-	// Creates an empty ToDoModel
-	ToDoModel model = new ToDoModel();
-	// Creates a controller using that model and adds this test as an observer.
-	ToDoController control = new ToDoController(model);
-	control.addObserver(this);
+    	// Creates an empty ToDoModel
+    	ToDoModel model = new ToDoModel();
+		// Creates a controller using that model and adds this test as an observer.
+		ToDoController control = new ToDoController(model);
+		control.addObserver(this);
     	control.addList("Second List");
     	control.addList("Third List");
     	control.addList("Fourth List");
@@ -319,6 +319,130 @@ public class ToDoTest implements Observer {
     	assertEquals("Aerith", list.getTask(0).getName());
     	assertEquals("Cloud", list.getTask(1).getName());
     	assertEquals("Bob", list.getTask(2).getName());
+    }
+    
+    /**
+     * Test method for removing a task.
+     */
+    @Test
+    void testRemoveTask() {
+    	// Creates an empty ToDoModel
+    	ToDoModel model = new ToDoModel();
+    	// Creates a controller using that model and adds this test as an observer.
+    	ToDoController control = new ToDoController(model);
+    	control.addObserver(this);
+    	
+    	control.addTask("Task 1", "First", "01/01/2005", "Important!!!", "Tucson");
+    	control.removeTask(0);
+    	assertEquals(list.amountTasks(), 0);
+    }
+    
+    /**
+     * Test method for removing 1 out of multiple tasks.
+     */
+    @Test
+    void testRemoveTask2() {
+    	// Creates an empty ToDoModel
+    	ToDoModel model = new ToDoModel();
+    	// Creates a controller using that model and adds this test as an observer.
+    	ToDoController control = new ToDoController(model);
+    	control.addObserver(this);
+    	
+    	control.addTask("Task 1", "First", "01/01/2005", "Important!!!", "Tucson");
+    	control.addTask("Task 2", "Second", "01/01/2005", "", "Tucson");
+    	control.addTask("Task 3", "Third", "01/02/2005", "", "Tucson");
+    	control.removeTask(1);
+    	
+    	assertEquals(list.getTask(0).getName(), "Task 1");
+    	assertEquals(list.getTask(1).getName(), "Task 3");
+    }
+    
+    /**
+     * Test method for changing the importance of a task.
+     */
+    @Test
+    void testChangeImportance() {
+    	// Creates an empty ToDoModel
+    	ToDoModel model = new ToDoModel();
+    	// Creates a controller using that model and adds this test as an observer.
+    	ToDoController control = new ToDoController(model);
+    	control.addObserver(this);
+    	
+    	control.addTask("Task 1", "First", "01/01/2005", "Important!!!", "Tucson");
+    	control.addTask("Task 2", "Second", "01/01/2005", "", "Tucson");
+    	
+    	control.changeImportance("", 0);
+    	control.changeImportance("important!!!", 1);
+    	
+    	assertEquals(list.getTask(0).getImportance(), "");
+    	assertEquals(list.getTask(1).getImportance(), "important!!!");
+    }
+    
+    /**
+     * Test method for changing the completion of a task.
+     */
+    @Test
+    void testChangeCompletion() {
+    	// Creates an empty ToDoModel
+    	ToDoModel model = new ToDoModel();
+    	// Creates a controller using that model and adds this test as an observer.
+    	ToDoController control = new ToDoController(model);
+    	control.addObserver(this);
+    	
+    	control.addTask("Task 1", "First", "01/01/2005", "Important!!!", "Tucson");
+    	control.addTask("Task 2", "Second", "01/01/2005", "", "Tucson");
+    	control.changeCompletion(true, 0);
+    	control.changeCompletion(true, 1);
+    	
+    	assertEquals(list.getTask(0).getCompletion(), true);
+    	assertEquals(list.getTask(1).getCompletion(), true);
+    	
+    	control.changeCompletion(false, 0);
+    	assertEquals(list.getTask(0).getCompletion(), false);
+    }
+    
+    /**
+     * Test method for changing the completion of a task.
+     */
+    @Test
+    void testHideCompleted() {
+    	// Creates an empty ToDoModel
+    	ToDoModel model = new ToDoModel();
+    	// Creates a controller using that model and adds this test as an observer.
+    	ToDoController control = new ToDoController(model);
+    	control.addObserver(this);
+    	
+    	control.addTask("Task 1", "First", "01/01/2005", "Important!!!", "Tucson");
+    	control.addTask("Task 2", "Second", "01/01/2005", "", "Tucson");
+    	control.changeCompletion(true, 0);
+    	control.changeCompletion(true, 1);
+    	
+    	control.hideCompletedTask();
+    	
+    	assertEquals(list.amountTasks(), 0);
+    }
+    
+    /**
+     * Test method for changing the completion of a task.
+     */
+    @Test
+    void testShowCompleted() {
+    	// Creates an empty ToDoModel
+    	ToDoModel model = new ToDoModel();
+    	// Creates a controller using that model and adds this test as an observer.
+    	ToDoController control = new ToDoController(model);
+    	control.addObserver(this);
+    	
+    	control.addTask("Task 1", "First", "01/01/2005", "Important!!!", "Tucson");
+    	control.addTask("Task 2", "Second", "01/01/2005", "", "Tucson");
+    	control.changeCompletion(true, 0);
+    	control.changeCompletion(true, 1);
+    	
+    	control.hideCompletedTask();
+    	assertEquals(list.amountTasks(), 0);
+    	
+    	control.showCompletedTask();
+    	assertEquals(list.amountTasks(), 2);
     }
     
     /**

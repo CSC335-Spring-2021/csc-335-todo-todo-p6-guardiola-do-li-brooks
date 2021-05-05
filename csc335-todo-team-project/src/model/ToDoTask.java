@@ -18,71 +18,59 @@ public class ToDoTask implements Serializable {
     private String important;
     private boolean complete;
 
-    public ToDoTask() {
-	this.name = "untitled task";
-	this.description = null;
-	this.complete = false;
-    }
-
-    public ToDoTask(String name) {
-	this.name = name;
-	this.description = null;
-	this.complete = false;
-    }
-
     public ToDoTask(String name, String description, String deadline, String importance, String location) {
-	this.name = name;
-	this.description = description;
-	this.deadline = deadline;
-	this.important = importance;
-	this.location = location;
-	this.createTime = new Date();
-	this.complete = false;
+    	this.name = name;
+    	this.description = description;
+    	this.deadline = deadline;
+    	this.important = importance;
+    	this.location = location;
+    	this.createTime = new Date();
+    	this.complete = false;
 	// System.out.println("Name:"+this.name+"\nDescription:"+this.description);
 	// //TESTING PURPOSES
     }
 
     public void rename(String newName) { // TODO: implement somehow when functionality is added to GUI
-	if (newName.equals("")) {
-	    this.name = "untitled task";
-	} else {
-	    this.name = newName;
-	}
+    	if (newName.equals("")) {
+    		this.name = "untitled task";
+    	} else {
+    		this.name = newName;
+    	}
     }
 
     public String getName() {
-	return this.name;
+    	return this.name;
     }
 
     public String getDescription() {
-	return this.description;
+    	return this.description;
     }
 
     public String getDeadline() {
-	return this.deadline;
+    	return this.deadline;
     }
 
     public String getImportance() {
-	return this.important;
+    	return this.important;
     }
 
     public String getLocation() {
-	return this.location;
+    	return this.location;
     }
 
     public boolean getCompletion() {
-	return this.complete;
+    	return this.complete;
     }
 
     public void setImportance(String importance) {
-	this.important = importance;
+    	this.important = importance;
     }
 
     public void setCompletion(boolean complete) {
-	this.complete = complete;
+    	this.complete = complete;
     }
 
     public Date getCreateTime() {
-	return this.createTime;
+    	return this.createTime;
     }
 }

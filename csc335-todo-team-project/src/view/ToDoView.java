@@ -127,9 +127,9 @@ public class ToDoView extends Application implements Observer {
 	    public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
 		if (handle) {
 		    if (ck.isSelected()) {
-			control.hideCompletedTask();
+		    	control.hideCompletedTask();
 		    } else {
-			control.showCompletedTask();
+		    	control.showCompletedTask();
 		    }
 		}
 	    }
@@ -154,16 +154,16 @@ public class ToDoView extends Application implements Observer {
 	nextButton.setOnAction(new EventHandler<ActionEvent>() {
 	    @Override
 	    public void handle(ActionEvent arg0) {
-		startup = true;
-		control.nextList();
+	    	startup = true;
+	    	control.nextList();
 	    }
 	});
 	Button prevButton = new Button("Prev List");
 	prevButton.setOnAction(new EventHandler<ActionEvent>() {
 	    @Override
 	    public void handle(ActionEvent arg0) {
-		startup = true;
-		control.prevList();
+	    	startup = true;
+	    	control.prevList();
 	    }
 	});
 	listSection.add(prevButton, 0, 0);
@@ -225,7 +225,7 @@ public class ToDoView extends Application implements Observer {
 	stage.show();
 
 	control.loadView();
-	startup = false;
+		startup = false;
     }
 
     /**
@@ -244,12 +244,12 @@ public class ToDoView extends Application implements Observer {
 	    // Sets up 2nd window, so that there is are for new list name
 	    // input.
 	    for (int i = 0; i < 2; i++) {
-		RowConstraints row = new RowConstraints();
-		row.setPercentHeight(50);
-		window2.getRowConstraints().add(row);
-		ColumnConstraints col = new ColumnConstraints();
-		col.setPercentWidth(50);
-		window2.getColumnConstraints().add(col);
+	    	RowConstraints row = new RowConstraints();
+	    	row.setPercentHeight(50);
+	    	window2.getRowConstraints().add(row);
+	    	ColumnConstraints col = new ColumnConstraints();
+	    	col.setPercentWidth(50);
+	    	window2.getColumnConstraints().add(col);
 	    }
 
 	    // Sets up area for user to input name of New List
@@ -300,12 +300,12 @@ public class ToDoView extends Application implements Observer {
 	    // Sets up 2nd window, so that there is are for new list name
 	    // input.
 	    for (int i = 0; i < 2; i++) {
-		RowConstraints row = new RowConstraints();
-		row.setPercentHeight(50);
-		window2.getRowConstraints().add(row);
-		ColumnConstraints col = new ColumnConstraints();
-		col.setPercentWidth(50);
-		window2.getColumnConstraints().add(col);
+	    	RowConstraints row = new RowConstraints();
+	    	row.setPercentHeight(50);
+	    	window2.getRowConstraints().add(row);
+	    	ColumnConstraints col = new ColumnConstraints();
+	    	col.setPercentWidth(50);
+	    	window2.getColumnConstraints().add(col);
 	    }
 
 	    // Sets up area for user to input name of New List
@@ -352,9 +352,9 @@ public class ToDoView extends Application implements Observer {
 	public void handle(ActionEvent arg0) {
 	    boolean valid = control.deleteList();
 	    if (!valid) {
-		Alert error = new Alert(Alert.AlertType.INFORMATION);
-		error.setContentText("Can't Delete Current List Because it is" + " the Only List!");
-		error.showAndWait();
+	    	Alert error = new Alert(Alert.AlertType.INFORMATION);
+	    	error.setContentText("Can't Delete Current List Because it is" + " the Only List!");
+	    	error.showAndWait();
 	    }
 	}
 
@@ -377,9 +377,9 @@ public class ToDoView extends Application implements Observer {
 	    // Sets up 2nd window, so that there is enough space for labels
 	    // and textfield
 	    for (int i = 0; i <= 5; i++) {
-		RowConstraints row = new RowConstraints();
-		row.setPercentHeight(25);
-		window2.getRowConstraints().add(row);
+	    	RowConstraints row = new RowConstraints();
+	    	row.setPercentHeight(25);
+	    	window2.getRowConstraints().add(row);
 	    }
 	    ColumnConstraints col1 = new ColumnConstraints();
 	    col1.setPercentWidth(50);
@@ -439,9 +439,9 @@ public class ToDoView extends Application implements Observer {
 		    String curDeadline = deadlineInput.getText();
 		    String curImportant;
 		    if (importanceBox.isSelected()) {
-			curImportant = "Important!!!";
+		    	curImportant = "Important!!!";
 		    } else {
-			curImportant = "";
+		    	curImportant = "";
 		    }
 		    String curLocation = locationInput.getText();
 		    control.addTask(curName, curDescription, curDeadline, curImportant, curLocation);
@@ -463,9 +463,9 @@ public class ToDoView extends Application implements Observer {
 	    String currID = ((CheckBox) arg0.getSource()).getId();
 	    int curr = Integer.parseInt(currID);
 	    if (((CheckBox) arg0.getSource()).isSelected()) {
-		control.changeImportance("Important!!!", curr);
+	    	control.changeImportance("Important!!!", curr);
 	    } else {
-		control.changeImportance("", curr);
+	    	control.changeImportance("", curr);
 	    }
 	}
     }
@@ -477,9 +477,9 @@ public class ToDoView extends Application implements Observer {
 	    String currID = ((CheckBox) arg0.getSource()).getId();
 	    int curr = Integer.parseInt(currID);
 	    if (((CheckBox) arg0.getSource()).isSelected()) {
-		control.changeCompletion(true, curr);
+	    	control.changeCompletion(true, curr);
 	    } else {
-		control.changeCompletion(false, curr);
+	    	control.changeCompletion(false, curr);
 	    }
 	}
     }
@@ -629,12 +629,12 @@ public class ToDoView extends Application implements Observer {
 		    GridPane window2 = new GridPane();
 
 		    for (int i = 0; i < 2; i++) {
-			RowConstraints row = new RowConstraints();
-			row.setPercentHeight(50);
-			window2.getRowConstraints().add(row);
-			ColumnConstraints col = new ColumnConstraints();
-			col.setPercentWidth(50);
-			window2.getColumnConstraints().add(col);
+		    	RowConstraints row = new RowConstraints();
+		    	row.setPercentHeight(50);
+		    	window2.getRowConstraints().add(row);
+		    	ColumnConstraints col = new ColumnConstraints();
+		    	col.setPercentWidth(50);
+		    	window2.getColumnConstraints().add(col);
 		    }
 
 		    Label name = new Label("Name: ");
@@ -675,13 +675,13 @@ public class ToDoView extends Application implements Observer {
 		    String index = ((Node) arg0.getSource()).getId();
 		    int ind = Integer.parseInt(index);
 		    for (int i = 0; i < id; i++) {
-			if (i > ind) {
-			    String currID = rows.get(i).getChildren().get(7).getId();
-			    int curr = Integer.parseInt(currID) - 1;
-			    rows.get(i).getChildren().get(5).setId("" + curr);
-			    rows.get(i).getChildren().get(6).setId("" + curr);
-			    rows.get(i).getChildren().get(7).setId("" + curr);
-			}
+		    	if (i > ind) {
+		    		String currID = rows.get(i).getChildren().get(7).getId();
+		    		int curr = Integer.parseInt(currID) - 1;
+		    		rows.get(i).getChildren().get(5).setId("" + curr);
+		    		rows.get(i).getChildren().get(6).setId("" + curr);
+		    		rows.get(i).getChildren().get(7).setId("" + curr);
+		    	}
 		    }
 		    rows.remove(ind);
 		    id--;

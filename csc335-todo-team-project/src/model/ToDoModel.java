@@ -18,10 +18,10 @@ public class ToDoModel implements Serializable {
      * Creates a List of ToDoLists that has only one ToDoList with no Tasks.
      */
     public ToDoModel() {
-	this.lists = new ArrayList<ToDoList>();
-	this.lists.add(new ToDoList());
-	curList = 0;
-	observer = null;
+    	this.lists = new ArrayList<ToDoList>();
+    	this.lists.add(new ToDoList());
+    	curList = 0;
+    	observer = null;
     }
 
     /**
@@ -30,8 +30,8 @@ public class ToDoModel implements Serializable {
      * @param color The color the list is changing to.
      */
     public void changeColor(String color) {
-	lists.get(curList).setColor(color);
-	loadView();
+    	lists.get(curList).setColor(color);
+    	loadView();
     }
 
     /**
@@ -43,10 +43,10 @@ public class ToDoModel implements Serializable {
      * @param name The name of the new ToDoList.
      */
     public void addList(String name) {
-	lists.add(new ToDoList(name));
-	curList = lists.size() - 1;
-	lists.get(curList).addObserver(observer);
-	loadView();
+    	lists.add(new ToDoList(name));
+    	curList = lists.size() - 1;
+    	lists.get(curList).addObserver(observer);
+    	loadView();
     }
 
     /**
@@ -57,11 +57,11 @@ public class ToDoModel implements Serializable {
      * ensure that it is fine to delete.
      */
     public void deleteList() {
-	int toBeRemoved = curList;
-	// Switches to the next list because the current one is about to be
-	// removed.
-	nextList();
-	lists.remove(toBeRemoved);
+    	int toBeRemoved = curList;
+    	// Switches to the next list because the current one is about to be
+    	// removed.
+    	nextList();
+    	lists.remove(toBeRemoved);
     }
 
     /**
@@ -69,13 +69,13 @@ public class ToDoModel implements Serializable {
      * list.
      */
     public void nextList() {
-	if (curList + 1 >= lists.size()) {
-	    // Case where list should loop back to beginning
-	    curList = 0;
-	} else {
-	    curList++;
-	}
-	loadView();
+    	if (curList + 1 >= lists.size()) {
+    		// Case where list should loop back to beginning
+    		curList = 0;
+    	} else {
+    		curList++;
+    	}
+    	loadView();
     }
 
     /**
@@ -83,20 +83,20 @@ public class ToDoModel implements Serializable {
      * function is called when the curList is the first list.
      */
     public void prevList() {
-	if (curList - 1 < 0) {
-	    // Case where list should loop to the end
-	    curList = lists.size() - 1;
-	} else {
-	    curList--;
-	}
-	loadView();
+    	if (curList - 1 < 0) {
+    		// Case where list should loop to the end
+    		curList = lists.size() - 1;
+    	} else {
+    		curList--;
+    	}
+    	loadView();
     }
 
     /**
      * @return True if the model holds more than one list currently.
      */
     public boolean moreThanOneList() {
-	return lists.size() > 1;
+    	return lists.size() > 1;
     }
 
     /**
@@ -106,18 +106,18 @@ public class ToDoModel implements Serializable {
      * @param name The new name of the list.
      */
     public void renameList(String name) {
-	lists.get(curList).renameList(name);
-	loadView();
+    	lists.get(curList).renameList(name);
+		loadView();
     }
     
     public void renameTask(String name,int pos) {
-	lists.get(curList).renameTask(name,pos);
-	if (lists.get(curList).getCurrentSorting().equals("Name")) {
-		// Case where renamed task must be sorted.
-		sort("Name");
-	} else {
-		loadView();
-	}
+    	lists.get(curList).renameTask(name,pos);
+    	if (lists.get(curList).getCurrentSorting().equals("Name")) {
+    		// Case where renamed task must be sorted.
+    		sort("Name");
+    	} else {
+    		loadView();
+    	}
     }
     
 
@@ -131,11 +131,11 @@ public class ToDoModel implements Serializable {
      * @param location    The location of the task.
      */
     public void addTask(String name, String description, String deadline, String importance, String location) {
-	if (lists.size() > 0) {
-	    lists.get(curList).addTask(name, description, deadline, importance, location);
-	    // Sorts the newly added list.
-	    sort(lists.get(curList).getCurrentSorting());
-	}
+    	if (lists.size() > 0) {
+    		lists.get(curList).addTask(name, description, deadline, importance, location);
+    		// Sorts the newly added list.
+    		sort(lists.get(curList).getCurrentSorting());
+    	}
     }
 
     /**
@@ -144,8 +144,8 @@ public class ToDoModel implements Serializable {
      * @param index The task's index.
      */
     public void removeTask(int index) {
-	this.lists.get(curList).removeTask(index);
-	loadView();
+    	this.lists.get(curList).removeTask(index);
+    	loadView();
     }
 
     /**
@@ -158,11 +158,11 @@ public class ToDoModel implements Serializable {
      */
     @SuppressWarnings("deprecation")
     public void addObserver(Observer view) {
-	observer = view;
+    	observer = view;
 
-	for (int i = 0; i < lists.size(); i++) {
-	    lists.get(i).addObserver(observer);
-	}
+    	for (int i = 0; i < lists.size(); i++) {
+    		lists.get(i).addObserver(observer);
+    	}
     }
 
     /**
@@ -172,17 +172,17 @@ public class ToDoModel implements Serializable {
      * @throws IOException Means that the file was not able to be written to.
      */
     public void saveLists() throws IOException {
-	FileOutputStream file = new FileOutputStream("save.dat");
-	ObjectOutputStream oos = new ObjectOutputStream(file);
-	oos.writeObject(this);
-	oos.close();
+    	FileOutputStream file = new FileOutputStream("save.dat");
+    	ObjectOutputStream oos = new ObjectOutputStream(file);
+    	oos.writeObject(this);
+    	oos.close();
     }
 
     /**
      * Loads the current List.
      */
     public void loadView() {
-	lists.get(curList).loadView();
+    	lists.get(curList).loadView();
     }
 
     /**
@@ -193,13 +193,13 @@ public class ToDoModel implements Serializable {
      *                   changed.
      */
     public void changeImportance(String importance, int curr) {
-	lists.get(curList).getTask(curr).setImportance(importance);
-	if (lists.get(curList).getCurrentSorting().equals("Importance")) {
-	    // Must sort the new Important task.
-	    sort("Importance");
-	} else {
-	    loadView();
-	}
+    	lists.get(curList).getTask(curr).setImportance(importance);
+    	if (lists.get(curList).getCurrentSorting().equals("Importance")) {
+    		// Must sort the new Important task.
+    		sort("Importance");
+    	} else {
+    		loadView();
+    	}
     }
 
     /**
@@ -210,13 +210,13 @@ public class ToDoModel implements Serializable {
      *                 changed.
      */
     public void changeCompletion(boolean complete, int curr) {
-	lists.get(curList).getTask(curr).setCompletion(complete);
-	if (lists.get(curList).getHideComplete()) {
-	    // Means this task must be now hidden.
-	    hideCompletedTask();
-	} else {
-	    loadView();
-	}
+    	lists.get(curList).getTask(curr).setCompletion(complete);
+    	if (lists.get(curList).getHideComplete()) {
+    		// Means this task must be now hidden.
+    		hideCompletedTask();
+    	} else {
+    		loadView();
+    	}
     }
 
     /**
@@ -228,50 +228,50 @@ public class ToDoModel implements Serializable {
      * @param sortBy The given sorting as String.
      */
     public void sort(String sortBy) {
-	switch (sortBy) {
-	case "Name":
-	    lists.get(curList).sortByName();
-	    break;
-	case "Deadline":
-	    lists.get(curList).sortByDeadline();
-	    break;
-	case "Importance":
-	    lists.get(curList).sortByImportance();
-	    break;
-	case "Create time":
-	    lists.get(curList).sortByCreateTime();
-	    break;
-	case "Custom":
-	    // Does not sort as it indicates it is sorting by
-	    // Move up and move down.
-	    break;
-	}
-	loadView();
+    	switch (sortBy) {
+    	case "Name":
+    		lists.get(curList).sortByName();
+    		break;
+    	case "Deadline":
+    		lists.get(curList).sortByDeadline();
+    		break;
+    	case "Importance":
+    		lists.get(curList).sortByImportance();
+    		break;
+    	case "Create time":
+    		lists.get(curList).sortByCreateTime();
+    		break;
+    	case "Custom":
+    		// Does not sort as it indicates it is sorting by
+    		// Move up and move down.
+    		break;
+    	}
+    	loadView();
     }
 
     public void hideCompletedTask() {
-	lists.get(curList).hideCompleted();
-	loadView();
+    	lists.get(curList).hideCompleted();
+    	loadView();
     }
 
     public void showCompletedTask() {
-	lists.get(curList).showCompleted();
-	// Must resort the current list with the newly shown tasks.
-	sort(lists.get(curList).getCurrentSorting());
+    	lists.get(curList).showCompleted();
+    	// Must resort the current list with the newly shown tasks.
+    	sort(lists.get(curList).getCurrentSorting());
     }
 
     public void moveUp(int pos) {
-	lists.get(curList).moveUp(pos);
-	loadView();
+    	lists.get(curList).moveUp(pos);
+    	loadView();
     }
 
     public void moveTop(int pos) {
-	lists.get(curList).moveTop(pos);
-	loadView();
+    	lists.get(curList).moveTop(pos);
+    	loadView();
     }
     
     //For JUnit testing
     public String getNameList() {
-	return this.lists.get(curList).getNameList();
+    	return this.lists.get(curList).getNameList();
     }
 }
