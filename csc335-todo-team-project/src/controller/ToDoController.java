@@ -188,4 +188,9 @@ public class ToDoController {
     public void moveTop(int pos) {
 	model.moveTop(pos);
     }
+    
+    //Added for JUnit testing
+    public String getNameList() {
+	return model.getNameList();
+    }
 }

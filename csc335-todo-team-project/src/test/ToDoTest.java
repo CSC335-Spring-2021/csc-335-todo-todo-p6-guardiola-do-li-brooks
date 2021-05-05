@@ -60,6 +60,122 @@ public class ToDoTest implements Observer {
     }
     
     /**
+     * Test method for renaming existing tasks.
+     */
+    @Test
+    void testRenameTask() {  //TODO: IMPLEMENT
+    	// Creates an empty ToDoModel
+    	ToDoModel model = new ToDoModel();
+    	// Creates a controller using that model and adds this test as an observer.
+    	ToDoController control = new ToDoController(model);
+    	control.addObserver(this);
+    	control.addTask("Task 1", "First", "01/01/2005", "Important!!!", "Tucson");
+    	control.addTask("Task 2", "Second", "02/02/2005", "Important!!!", "Tucson");
+    	control.addTask("Task 3", "Third", "03/03/2005", "Important!!!", "Tucson");
+    	control.renameTask("First Task",0);
+    	control.renameTask("Last Task", 2);
+    	assertEquals("First Task",list.getTask(0).getName());
+    	assertEquals("Last Task",list.getTask(2).getName());
+
+
+    }
+    
+    /**
+     * Test method for renaming existing tasks.
+     */
+    @Test
+    void testRenameList() {  //TODO: IMPLEMENT
+    	// Creates an empty ToDoModel
+    	ToDoModel model = new ToDoModel();
+    	// Creates a controller using that model and adds this test as an observer.
+    	ToDoController control = new ToDoController(model);
+    	
+    	control.addObserver(this);
+    	control.addTask("Task 1", "First", "01/01/2005", "Important!!!", "Tucson");
+    	String originalName=list.getNameList();
+    	control.renameList("Grocery List");
+    	assertFalse(list.getNameList().equals(originalName));
+    	assertTrue(list.getNameList().equals("Grocery List"));
+    }
+    
+    
+    /**
+     * Test method for deleting lists.
+     */
+    @Test
+    void testDeleteList() {  //TODO: CHECK AUTO NEXT WHEN ADDING SITUATION
+    	// Creates an empty ToDoModel
+    	ToDoModel model = new ToDoModel();
+    	// Creates a controller using that model and adds this test as an observer.
+    	ToDoController control = new ToDoController(model);
+    	control.addObserver(this);
+    	control.addTask("Task 1", "First", "01/01/2005", "Important!!!", "Tucson");
+    	assertFalse(control.deleteList());
+    	control.addList("Second List");
+    	control.nextList();
+    	String origListName=control.getNameList();
+    	control.prevList();
+    	assertTrue(control.deleteList());
+    	assertTrue(control.getNameList().equals(origListName));
+    }
+    
+    /**
+     * Test method for switching to next list.
+     */
+    @Test
+    void testNextList() {  //TODO: IMPLEMENT
+    	// Creates an empty ToDoModel
+    	ToDoModel model = new ToDoModel();
+    	// Creates a controller using that model and adds this test as an observer.
+    	ToDoController control = new ToDoController(model);
+    	control.addObserver(this);
+    	control.addList("Second List");
+    	control.addList("Third List");
+    	control.addList("Fourth List");
+    	control.nextList();
+    	assertTrue(control.getNameList().equals("List 1"));
+    	control.nextList();
+    	assertTrue(control.getNameList().equals("Second List"));
+    	assertFalse(control.getNameList().equals("List 1"));
+    	control.nextList();
+    	assertTrue(control.getNameList().equals("Third List"));
+    	assertFalse(control.getNameList().equals("List 1"));
+    	control.nextList();
+    	assertTrue(control.getNameList().equals("Fourth List"));
+    	assertFalse(control.getNameList().equals("List 1"));
+
+    }
+    
+    /**
+     * Test method for switching to previous list.
+     */
+    @Test
+    void testPrevList() {  //TODO: IMPLEMENT
+    	// Creates an empty ToDoModel
+    	ToDoModel model = new ToDoModel();
+    	// Creates a controller using that model and adds this test as an observer.
+    	ToDoController control = new ToDoController(model);
+    	control.addObserver(this);
+    	control.addTask("Task 1", "First", "01/01/2005", "Important!!!", "Tucson");
+    	control.addList("Second List");
+    	control.addList("Third List");
+    	control.addList("Fourth List");
+    	for(int i=0;i<3;i++) {
+    	    control.prevList();
+    	}
+    	assertTrue(control.getNameList().equals("List 1"));
+    	control.prevList();
+    	assertTrue(control.getNameList().equals("Fourth List"));
+    	assertFalse(control.getNameList().equals("List 1"));
+    	control.prevList();
+    	assertTrue(control.getNameList().equals("Third List"));
+    	assertFalse(control.getNameList().equals("List 1"));
+    	control.prevList();
+    	assertTrue(control.getNameList().equals("Second List"));
+    	assertFalse(control.getNameList().equals("List 1"));
+    }
+    
+    /**
      *  Used to access the ToDoList to check that controller methods work.
      */
 	@Override

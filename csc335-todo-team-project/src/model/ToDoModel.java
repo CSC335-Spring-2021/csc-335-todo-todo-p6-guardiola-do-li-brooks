@@ -264,4 +264,9 @@ public class ToDoModel implements Serializable {
 	lists.get(curList).moveTop(pos);
 	loadView();
     }
+    
+    //For JUnit testing
+    public String getNameList() {
+	return this.lists.get(curList).getNameList();
+    }
 }
