@@ -109,11 +109,15 @@ public class ToDoController {
      */
     public void addTask(String name, String description, String deadline, String importance, String location) {
 	if (name.equals("")) {
-	    name = "unnamed task";
+	    Alert error = new Alert(Alert.AlertType.INFORMATION);
+	    error.setTitle("ERROR");
+	    error.setHeaderText("No Name Entered");
+	    error.setContentText("Must Enter a Name");
+	    error.showAndWait();
+	    return;
 	}
-	if (deadline.equals("mm/dd/year")) {
-	    deadline = "";
-	} else if (!deadline.equals("") && deadline.split("/").length != 3) {
+	String[] deadlineArr=deadline.split("/");
+	if (deadline.equals("mm/dd/year") || deadlineArr.length!=3) {
 	    Alert error = new Alert(Alert.AlertType.INFORMATION);
 	    error.setTitle("ERROR");
 	    error.setHeaderText("Invalid Date Entered");

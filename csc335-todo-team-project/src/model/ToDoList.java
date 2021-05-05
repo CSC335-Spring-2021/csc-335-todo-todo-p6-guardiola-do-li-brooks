@@ -90,10 +90,8 @@ public class ToDoList extends Observable implements Serializable {
     }
 
     public void addTask(String taskName, String description, String deadline, String importance, String location) {
-	if (taskName != null) {
-	    ToDoTask newTask = new ToDoTask(taskName, description, deadline, importance, location);
-	    this.tasks.add(newTask);
-	}
+	ToDoTask newTask = new ToDoTask(taskName, description, deadline, importance, location);
+	this.tasks.add(newTask);
     }
 
     public void removeTask(int index) {
