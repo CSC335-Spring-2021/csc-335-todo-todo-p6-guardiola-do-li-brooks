@@ -130,7 +130,8 @@ public class ToDoList extends Observable implements Serializable {
     }
 
     /**
-     * taskList sort by deadline
+     * Sorts the list of tasks by the deadline. The sooner a deadline is
+     * the higher the task will be placed on the list.
      */
     public void sortByDeadline() {
 	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
@@ -162,7 +163,8 @@ public class ToDoList extends Observable implements Serializable {
     }
 
     /**
-     * taskList sort by importance
+     * Sorts the list of tasks by importance and also name. (Meaning letter A
+     * important tasks will be higher on the list than Z important tasks)
      */
     public void sortByImportance() {
 	ArrayList<ToDoTask> important = new ArrayList<>();
@@ -186,7 +188,7 @@ public class ToDoList extends Observable implements Serializable {
     }
 
     /**
-     * taskList sort by name
+     * Sorts the list of tasks by the name alphabetically.
      */
     public void sortByName() {
 	currentSorting = "Name";
@@ -194,7 +196,9 @@ public class ToDoList extends Observable implements Serializable {
     }
 
     /**
-     * taskList sort by create time
+     * Sorts the list of tasks by the date that the task was created.
+     * The earlier the task was created the higher it will be placed on the
+     * list.
      */
     public void sortByCreateTime() {
 	currentSorting = "Create time";
@@ -237,7 +241,7 @@ public class ToDoList extends Observable implements Serializable {
      * show completed task
      */
     public void showCompleted() {
-	hideComplete = true;
+	hideComplete = false;
 	tasks.addAll(completedTasks);
 	completedTasks.clear();
     }

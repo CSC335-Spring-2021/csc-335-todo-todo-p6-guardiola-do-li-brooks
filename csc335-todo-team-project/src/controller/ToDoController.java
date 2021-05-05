@@ -168,7 +168,15 @@ public class ToDoController {
     public void saveLists() throws IOException {
 	model.saveLists();
     }
-
+    
+    /**
+     * Sorts the current list of task the way the given String mentions to do it.
+     * 
+     * sortBy can be Name, Deadline, Importance, Create time, Custom
+     * Any other given sortBy will do nothing.
+     * 
+     * @param sortBy The way the list will be sorted.
+     */
     public void sort(String sortBy) {
 	model.sort(sortBy);
     }
