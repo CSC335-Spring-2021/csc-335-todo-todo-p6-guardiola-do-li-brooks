@@ -112,7 +112,12 @@ public class ToDoModel implements Serializable {
     
     public void renameTask(String name,int pos) {
 	lists.get(curList).renameTask(name,pos);
-	loadView();
+	if (lists.get(curList).getCurrentSorting().equals("Name")) {
+		// Case where renamed task must be sorted.
+		sort("Name");
+	} else {
+		loadView();
+	}
     }
     
 

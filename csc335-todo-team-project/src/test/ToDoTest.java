@@ -25,6 +25,7 @@ public class ToDoTest implements Observer {
     	// Creates a controller using that model and adds this test as an observer.
     	ToDoController control = new ToDoController(model);
     	control.addObserver(this);
+    	
     	control.addTask("Task 1", "First", "01/01/2005", "Important!!!", "Tucson");
     	ToDoTask task1 = list.getTask(0);
     	ToDoTask test1 = new ToDoTask("Task 1", "First", "01/01/2005", 
@@ -37,6 +38,7 @@ public class ToDoTest implements Observer {
     	assertEquals(test1.getImportance(), task1.getImportance());
     	assertEquals(test1.getLocation(), task1.getLocation());
     	assertEquals(test1.getCompletion(), task1.getCompletion());
+    	
     	// Tests that multiple tasks can be added to the list.
     	control.addTask("Task 2", "", "01/01/2006", "", "Name/Address");
     	ToDoTask task2 = list.getTask(1);
@@ -69,6 +71,7 @@ public class ToDoTest implements Observer {
     	// Creates a controller using that model and adds this test as an observer.
     	ToDoController control = new ToDoController(model);
     	control.addObserver(this);
+    	
     	// Tests that the current list was changed to the color red.
     	control.changeColor("Red");
     	assertEquals("Red", list.getColor());
@@ -95,10 +98,12 @@ public class ToDoTest implements Observer {
     	// Creates a controller using that model and adds this test as an observer.
     	ToDoController control = new ToDoController(model);
     	control.addObserver(this);
+    	
     	// Adds three tasks
     	control.addTask("First", "", "01/01/2001", "", "");
     	control.addTask("Second", "", "01/01/2021", "", "");
     	control.addTask("Third", "", "01/01/2001", "", "");
+    	
     	// Moves the task named Third up, so that the task named Second is
     	// placed after it. First should still be the first task.
     	control.moveUp(2);
@@ -110,8 +115,9 @@ public class ToDoTest implements Observer {
     	assertEquals("First", list.getTask(0).getName());
     	// Checks that currentSorting for the list has been set to Custom
     	assertEquals("Custom", list.getCurrentSorting());
+    	
     	// Moves the task named Second to be the top of the list (first task),
-    	// First should now be behind Second and Thrid should be behind First.
+    	// First should now be behind Second and Third should be behind First.
     	control.moveTop(2);
     	// Checks that Second is now the 1st task in the list.
     	assertEquals("Second", list.getTask(0).getName());
@@ -119,6 +125,82 @@ public class ToDoTest implements Observer {
     	assertEquals("First", list.getTask(1).getName());
     	// Checks that Third is now the 3rd task in the list.
     	assertEquals("Third", list.getTask(2).getName());
+    }
+    
+    /**
+     * Tests the sorting method works.
+     */
+    @Test
+    void testSort() {
+    	// Creates an empty ToDoModel
+    	ToDoModel model = new ToDoModel();
+    	// Creates a controller using that model and adds this test as an observer.
+    	ToDoController control = new ToDoController(model);
+    	control.addObserver(this);
+    	
+    	// Adds three tasks
+    	// Thread sleep, so that the tasks don't have the same create time.
+    	// Without thread sleep it is possible the computer runs fast enough
+    	// that the creation time is too close that it ends up being seen as
+    	// the same by the sort("Create time") code.
+    	// When users manually addTask to the program through the GUI, the user
+    	// adds them much slower than a computer which is why there is not
+    	// thread sleep in the regular code.
+    	control.addTask("Cloud", "", "08/11/1986", "Important!!!", "");
+    	try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			System.out.println("Shouldn't run.");
+		}
+    	control.addTask("Bob", "", "01/01/2001", "", "");
+    	try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			System.out.println("Shouldn't run.");
+		}
+    	control.addTask("Aerith", "", "02/07/1985", "Important!!!", "");
+    	
+    	// Sorts the tasks so that they are sorted alphabetically.
+    	control.sort("Name");
+    	// Checks that the tasks are in alphabetical order.
+    	assertEquals("Aerith", list.getTask(0).getName());
+    	assertEquals("Bob", list.getTask(1).getName());
+    	assertEquals("Cloud", list.getTask(2).getName());
+    	
+    	// Sorts the tasks so that they are sorted by deadline.
+    	control.sort("Deadline");
+    	// Checks that the tasks are sorted by their deadlines.
+    	// Correct order should be Aerith, Cloud, Bob
+    	assertEquals("Aerith", list.getTask(0).getName());
+    	assertEquals("Cloud", list.getTask(1).getName());
+    	assertEquals("Bob", list.getTask(2).getName());
+    	
+    	// Sorts the tasks so that they are sorted by Create time.
+    	control.sort("Create time");
+    	// Checks that the tasks are sorted by their creation date.
+    	// The sooner they were created the higher on the list they should be.
+    	assertEquals("Cloud", list.getTask(0).getName());
+    	assertEquals("Bob", list.getTask(1).getName());
+    	assertEquals("Aerith", list.getTask(2).getName());
+    	
+    	// Sorts the tasks so that they are sorted by importance.
+    	control.sort("Importance");
+    	// Checks that the tasks are sorted by their importance.
+    	// Also sort by importance sorts by alphabetically as well, so
+    	// Aerith should come before Cloud as she is important and
+    	// alphabetically first.
+    	assertEquals("Aerith", list.getTask(0).getName());
+    	assertEquals("Cloud", list.getTask(1).getName());
+    	assertEquals("Bob", list.getTask(2).getName());
+    	
+    	// Sorting by custom does nothing as custom sort indicates that
+    	// the sorting will be done through the moveUp and moveDown methods.
+    	// If custom is sent to sort it should do nothing.
+    	control.sort("Custom");
+    	// Checks that nothing changed the sorting.
+    	assertEquals("Aerith", list.getTask(0).getName());
+    	assertEquals("Cloud", list.getTask(1).getName());
+    	assertEquals("Bob", list.getTask(2).getName());
     }
     
     /**
