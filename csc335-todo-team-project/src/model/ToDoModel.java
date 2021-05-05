@@ -130,8 +130,6 @@ public class ToDoModel implements Serializable {
 	    lists.get(curList).addTask(name, description, deadline, importance, location);
 	    // Sorts the newly added list.
 	    sort(lists.get(curList).getCurrentSorting());
-	} else {
-	    System.out.println("THERE IS NO LIST TO ADD TO");
 	}
     }
 
