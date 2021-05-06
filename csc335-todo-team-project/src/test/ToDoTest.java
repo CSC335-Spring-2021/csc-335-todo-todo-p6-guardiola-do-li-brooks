@@ -125,18 +125,18 @@ public class ToDoTest implements Observer {
     	control.addObserver(this);
 
     	// Tests that the current list was changed to the color red.
-    	control.changeColor("Red");
-    	assertEquals("Red", list.getColor());
+    	control.changeColor("red");
+    	assertEquals("red", list.getColor());
     	// Tests that the current list can have it's color changed again.
-    	control.changeColor("Blue");
-    	assertEquals("Blue", list.getColor());
+    	control.changeColor("blue");
+    	assertEquals("blue", list.getColor());
     	// Tests that another list can have a different color.
     	control.addList("List 2");
-    	control.changeColor("Tan");
-    	assertEquals("Tan", list.getColor());
+    	control.changeColor("tan");
+    	assertEquals("tan", list.getColor());
     	// Tests that previous list still has the color correctly stored.
     	control.nextList();
-    	assertEquals("Blue", list.getColor());
+    	assertEquals("blue", list.getColor());
 
     }
     
@@ -499,11 +499,11 @@ public class ToDoTest implements Observer {
     	// lists. Also changes color of list to make sure that is saved too.
     	control.addTask("Yellow", "Color", "01/01/2001", "Important!!!", "Tucson");
     	control.addTask("Bellow", "", "05/05/2021", "", "");
-    	control.changeColor("Blue");
+    	control.changeColor("blue");
     	control.renameList("First");
     	control.addList("List 2");
     	control.addTask("Task", "", "01/05/2021", "", "");
-    	control.changeColor("Red");
+    	control.changeColor("red");
     	try {
 			control.saveLists();
 		} catch (IOException e) {
@@ -536,7 +536,7 @@ public class ToDoTest implements Observer {
     	
     	// Checks that the current list still has the name, color, and tasks
     	assertEquals("List 2", list.getNameList());
-    	assertEquals("Red", list.getColor());
+    	assertEquals("red", list.getColor());
     	assertEquals("Task", list.getTask(0).getName());
     	assertEquals("", list.getTask(0).getDescription());
     	assertEquals("01/05/2021", list.getTask(0).getDeadline());
@@ -547,7 +547,7 @@ public class ToDoTest implements Observer {
     	control2.prevList();
     	// Checks that the previous list was also saved.
     	assertEquals("First", list.getNameList());
-    	assertEquals("Blue", list.getColor());
+    	assertEquals("blue", list.getColor());
     	assertEquals("Yellow", list.getTask(0).getName());
     	assertEquals("Color", list.getTask(0).getDescription());
     	assertEquals("01/01/2001", list.getTask(0).getDeadline());
