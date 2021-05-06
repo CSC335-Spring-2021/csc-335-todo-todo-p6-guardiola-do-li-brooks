@@ -6,7 +6,21 @@ import java.util.Observer;
 import javafx.scene.control.Alert;
 import model.ToDoModel;
 
+/**
+ * Takes inputs from the view to send changes to the model
+ * 
+ * Creates a model object to send updates to that originate from the view 
+ * class. Can also load in models if a save file is found. Methods possible 
+ * includes loading the view when an update occurs, adding tasks/lists,
+ * removing tasks/lists along with changing attributes of the tasks. 
+ * 
+ * @author Henry Do, Gerry Guardiola, Mauricio Brooks, Xin Li
+ *
+ */
 public class ToDoController {
+	/** 
+	 * model object used to communicate view interactions/updates
+	 */
     private ToDoModel model;
 
     /**
@@ -33,7 +47,7 @@ public class ToDoController {
     }
 
     /**
-     * Changes the list color to the given one.
+     * Changes the list color to the given String.
      * 
      * @param color The new list color.
      */
@@ -94,7 +108,12 @@ public class ToDoController {
     public void prevList() {
     	model.prevList();
     }
-    
+    /**
+     * Rename the task at a specified index to the new string.
+     * 
+     * @param name The string that the task will be renamed to. 
+     * @param pos  The index of the task that will be renamed.
+     */
     public void renameTask(String name,int pos) {
     	model.renameTask(name,pos);
     }
@@ -139,11 +158,25 @@ public class ToDoController {
     public void removeTask(int index) {
     	model.removeTask(index);
     }
-
+    
+    /**
+     * Changes the importance field of a task to the input string.
+     * 
+     * @param important String containing the importance value of the task.
+     * @param curr      Integer index of the task thats importance value is 
+     * 					being changed.
+     */
     public void changeImportance(String important, int curr) {
     	model.changeImportance(important, curr);
     }
 
+    /**
+     * Changes the complete field of a task to the boolean input.
+     * 
+     * @param complete Boolean containing the completion state of the task.
+     * @param curr     Integer index of the task thats completion state is 
+     * 				   being changed.
+     */
     public void changeCompletion(boolean complete, int curr) {
     	model.changeCompletion(complete, curr);
     }
@@ -181,23 +214,41 @@ public class ToDoController {
     	model.sort(sortBy);
     }
 
+    /**
+     * Calls model method to hide the currently completed tasks from the view.
+     */
     public void hideCompletedTask() {
     	model.hideCompletedTask();
     }
 
+    /**
+     * Calls model method to show the currently completed tasks from the view.
+     */
     public void showCompletedTask() {
     	model.showCompletedTask();
     }
 
+    /**
+     * Changes the position of a task up one in the list.
+     * 
+     * @param pos Integer of the current task being moved. 
+     */
     public void moveUp(int pos) {
     	model.moveUp(pos);
     }
 
+    /**
+     * Changes the position of a task to the top of the list.
+     * 
+     * @param pos Integer of the current task being moved.
+     */
     public void moveTop(int pos) {
     	model.moveTop(pos);
     }
     
-    //Added for JUnit testing
+    /**
+     * For JUnit testing to check list changing.
+     */
     public String getNameList() {
     	return model.getNameList();
     }
