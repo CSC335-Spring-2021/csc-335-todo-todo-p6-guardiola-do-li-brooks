@@ -125,6 +125,7 @@ public class ToDoController {
      * @param description The notes/description about the task.
      * @param deadline    The deadline for the task. (Should be (m/d/yr))
      * @param importance  Indicates whether the task is important or not.
+     * @param location    The String representing the location of the task. 
      */
     public void addTask(String name, String description, String deadline, String importance, String location) {
     	if (name.equals("")) {
@@ -248,6 +249,8 @@ public class ToDoController {
     
     /**
      * For JUnit testing to check list changing.
+     * 
+     * @return the String name of the list being used.
      */
     public String getNameList() {
     	return model.getNameList();
