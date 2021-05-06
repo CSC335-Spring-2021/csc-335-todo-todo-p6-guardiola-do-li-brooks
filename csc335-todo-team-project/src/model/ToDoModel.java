@@ -7,11 +7,34 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Observer;
 
+/**
+ * This class implements Serializable for saving and compiles all the lists
+ * that have been created by the user. Calls methods on whatever ToDo list is
+ * currently being used and allows for changing lists and communicates to the
+ * list class to change the tasks attributes. 
+ * 
+ * @author Henry Do, Gerry Guardiola, Mauricio Brooks, Xin Li
+ *
+ */
 public class ToDoModel implements Serializable {
+	/**
+	 * From Serializable uses default ID 
+	 */
     private static final long serialVersionUID = 1L;
-    // Can change way to hold lists.
+    
+    /**
+	 * ArrayList of ToDo list objects
+	 */
     private ArrayList<ToDoList> lists;
+    
+    /**
+	 * Integer representing the index of the current list being used
+	 */
     private int curList;
+    
+    /**
+	 * Observer object for notifying observable objects
+	 */
     private transient Observer observer;
 
     /**
@@ -249,28 +272,48 @@ public class ToDoModel implements Serializable {
     	loadView();
     }
 
+    /**
+	 * Gets current list and then hides the completed tasks in that list
+	 */
     public void hideCompletedTask() {
     	lists.get(curList).hideCompleted();
     	loadView();
     }
 
+    /**
+	 * Gets current list and then shows the completed tasks in that list
+	 */
     public void showCompletedTask() {
     	lists.get(curList).showCompleted();
     	// Must resort the current list with the newly shown tasks.
     	sort(lists.get(curList).getCurrentSorting());
     }
 
+    /**
+	 * Gets current list and based on the index given adjusts the position
+	 * of that task in the list. 
+	 * 
+	 * @param pos Integer index of the current task. 
+	 */
     public void moveUp(int pos) {
     	lists.get(curList).moveUp(pos);
     	loadView();
     }
 
+    /**
+	 * Gets current list and based on the index given adjusts the position
+	 * of that task in the list. 
+	 * 
+	 * @param pos Integer index of the current task.
+	 */
     public void moveTop(int pos) {
     	lists.get(curList).moveTop(pos);
     	loadView();
     }
     
-    //For JUnit testing
+    /**
+	 * Gets the String name of the current list to assist in JUnit testing.
+	 */
     public String getNameList() {
     	return this.lists.get(curList).getNameList();
     }

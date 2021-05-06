@@ -12,7 +12,26 @@ import model.ToDoList;
 import model.ToDoModel;
 import model.ToDoTask;
 
+/**
+ * This class tests coverage for both the controller and model classes
+ * 
+ * Uses JUnit to test the total coverage of classes and implements Observer
+ * for testing to allow for testing of the model class. Tests the expected
+ * task outcomes to achieve above 90% coverage.
+ * 
+ * Note: ToDoController class reaches 93% coverage if GUI elements are omitted
+ * which includes just two GUI alerts to the view which must be included for 
+ * functionality of the program which is why the controller is currently at 
+ * 74.1% coverage.
+ * 
+ * @author Henry Do, Gerry Guardiola, Mauricio Brooks, Xin Li
+ *
+ */
 public class ToDoTest implements Observer {
+	
+	/**
+     * ToDoList object to hold tasks.
+     */
 	private ToDoList list;
 
     /**
@@ -333,7 +352,8 @@ public class ToDoTest implements Observer {
     	control.addObserver(this);
     	
     	control.addTask("Task 1", "First", "01/01/2005", "Important!!!", "Tucson");
-    	control.removeTask(0);
+    	control.removeTask(0); 
+    	// task count should be 0 since 1 added and 1 removed
     	assertEquals(list.amountTasks(), 0);
     }
     
@@ -353,6 +373,7 @@ public class ToDoTest implements Observer {
     	control.addTask("Task 3", "Third", "01/02/2005", "", "Tucson");
     	control.removeTask(1);
     	
+    	// checks that list removed only the 2nd task putting task 3 at index 1
     	assertEquals(list.getTask(0).getName(), "Task 1");
     	assertEquals(list.getTask(1).getName(), "Task 3");
     }
@@ -371,6 +392,7 @@ public class ToDoTest implements Observer {
     	control.addTask("Task 1", "First", "01/01/2005", "Important!!!", "Tucson");
     	control.addTask("Task 2", "Second", "01/01/2005", "", "Tucson");
     	
+    	// swapped importance values
     	control.changeImportance("", 0);
     	control.changeImportance("important!!!", 1);
     	
@@ -419,6 +441,7 @@ public class ToDoTest implements Observer {
     	
     	control.hideCompletedTask();
     	
+    	// All tasks are completed and hidden so no tasks should be seen 
     	assertEquals(list.amountTasks(), 0);
     }
     
@@ -438,9 +461,11 @@ public class ToDoTest implements Observer {
     	control.changeCompletion(true, 0);
     	control.changeCompletion(true, 1);
     	
+    	// hide all tasks and check if any are found
     	control.hideCompletedTask();
     	assertEquals(list.amountTasks(), 0);
     	
+    	// now show all tasks and see if they are now present
     	control.showCompletedTask();
     	assertEquals(list.amountTasks(), 2);
     }

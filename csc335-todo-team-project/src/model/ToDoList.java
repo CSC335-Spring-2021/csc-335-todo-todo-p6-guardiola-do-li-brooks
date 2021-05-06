@@ -8,17 +8,49 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Observable;
 
+/**
+ * This class extends Observable and implements Serializable for saving.
+ * Compiles task objects into contained lists and allows for updating of 
+ * specified task fields and sorting. 
+ * 
+ * @author Henry Do, Gerry Guardiola, Mauricio Brooks, Xin Li
+ *
+ */
 @SuppressWarnings("deprecation")
 public class ToDoList extends Observable implements Serializable {
-    /**
-     * 
-     */
+	/**
+	 * From Serializable uses default ID 
+	 */
     private static final long serialVersionUID = 1L;
+    
+    /**
+	 * ArrayList that holds all tasks of current list
+	 */
     private ArrayList<ToDoTask> tasks;
+    
+    /**
+	 * ArrayLists that holds all tasks marked as completed
+	 */
     private ArrayList<ToDoTask> completedTasks;
+    
+    /**
+	 * Name of the current list
+	 */
     private String name;
+    
+    /**
+	 * Background color of the current list
+	 */
     private String color;
+    
+    /**
+	 * Current sorting format used in current list
+	 */
     private String currentSorting;
+    
+    /**
+	 * Boolean determining if the completed tasks should be hidden/shown
+	 */
     private boolean hideComplete;
 
     /**
@@ -80,16 +112,33 @@ public class ToDoList extends Observable implements Serializable {
     	return name;
     }
     
+    /**
+	 * Receives String from input to rename specified task to the new string.
+	 * 
+	 * @param name String containing the new task name.
+	 * @param pos  Integer position of the current task being renamed.
+	 */
     public void renameTask(String name, int pos) {
     	ToDoTask temp=tasks.get(pos);
     	temp.rename(name);
     }
 
+    /**
+	 * Receives String from input to rename specified task to the new string.
+	 * 
+	 * @param name String containing the new task name.
+	 * @param pos  Integer position of the current task being renamed.
+	 */
     public void addTask(String taskName, String description, String deadline, String importance, String location) {
     	ToDoTask newTask = new ToDoTask(taskName, description, deadline, importance, location);
     	this.tasks.add(newTask);
     }
-
+    
+    /**
+	 * Removes task at a specified index from the ArrayList.
+	 * 
+	 * @param index Integer position of the task being removed.
+	 */
     public void removeTask(int index) {
     	boolean taskSeen = this.tasks.remove(index) != null;
     	if (!taskSeen) {

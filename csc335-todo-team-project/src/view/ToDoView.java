@@ -41,190 +41,253 @@ import model.ToDoTask;
 import javax.swing.*;
 import javax.swing.SingleSelectionModel;
 
+/**
+ * Uses javafx GUI to implement a visual representation of the ToDo list 
+ * and allows for user interactions such as adding/removing tasks, adding/
+ * removing lists, marking/unmarking task importance/completion, changing 
+ * background colors of each list individually, and traversing multiple ToDo
+ * lists  changing sort order, renaming tasks/lists, hiding/showing
+ * completed tasks. This is done by communicating to a controller object and 
+ * using event handlers. 
+ * 
+ * @author Henry Do, Gerry Guardiola, Mauricio Brooks, Xin Li
+ *
+ */
 public class ToDoView extends Application implements Observer {
+	
+	/**
+     * view object that holds current view window.
+     */
     private ToDoView view;
+    
+    /**
+     * controller object that events will communicate information to.
+     */
     private ToDoController control;
+    
+    /**
+     * current window view being used. 
+     */
     private BorderPane window;
+    
+    /**
+     * holds tasks into rows.  
+     */
     private VBox taskSection;
+    
+    /**
+     * name of list being used currently. 
+     */
     private Label listName;
+    
+    /**
+     * dropdown menu to choose color of background. 
+     */
     private ChoiceBox<String> changeColor;
+    
+    /**
+     *dropdown menu to change sorting order. 
+     */
     private ComboBox<String> sort;
+    
+    /**
+     * checkbox to hide/show completed tasks.
+     */
     private CheckBox ck;
+    
+    /**
+     * Integer that represents the id of any interactable element.
+     */
     private int id;
+    
+    /**
+     * boolean that determines if launch is initial startup of the GUI.
+     */
     private boolean startup;
+    
+    /**
+     * boolean to handle events. 
+     */
     private boolean handle;
 
+    /**
+	 * start() method called when application is lanched in the main method of
+	 * this project and sets up the view for ToDo list.
+	 *
+	 * @param stage The top level javaFX container where the rest of the 
+	 *              elements will be placed into.
+	 */
     public void start(Stage stage) {
-	// Sets view to this view. This is what is passed to addObserver
-	view = this;
-	// Sets startup to true this indicates that a new list is being loaded in.
-	startup = true;
-	// Sets handle to false, so later on when first choice is set up by
-	// computer it doesn't actually do what the button is supposed to.
-	// Important to prevent errors.
-	handle = false;
-	stage.setTitle("ToDo");
-	window = new BorderPane();
-	// If anyone else wants a different window size mention it.
-	Scene scene = new Scene(window, 800, 600); // 800 px wide, 600 px tall
+    	// Sets view to this view. This is what is passed to addObserver
+    	view = this;
+    	// Sets startup to true this indicates that a new list is being loaded in.
+    	startup = true;
+    	// Sets handle to false, so later on when first choice is set up by
+    	// computer it doesn't actually do what the button is supposed to.
+    	// Important to prevent errors.
+    	handle = false;
+    	stage.setTitle("ToDo");
+    	window = new BorderPane();
+    	// If anyone else wants a different window size mention it.
+    	Scene scene = new Scene(window, 800, 600); // 800 px wide, 600 px tall
 
-	// VBox will be used to showoff all the tasks to the user
-	taskSection = new VBox(10); // 10 px spacing between rows
-	taskSection.setPadding(new Insets(10)); // 10px padding around VBox
-	window.setCenter(taskSection);
+    	// VBox will be used to showoff all the tasks to the user
+    	taskSection = new VBox(10); // 10 px spacing between rows
+    	taskSection.setPadding(new Insets(10)); // 10px padding around VBox
+    	window.setCenter(taskSection);
 
-	// Creates the model to be used by the controller.
-	ToDoModel modelToBeSent = null;
-	try {
-	    // Case where there is/are existing ToDoLists saved.
-	    FileInputStream file = new FileInputStream("save.dat");
-	    ObjectInputStream ois = new ObjectInputStream(file);
-	    modelToBeSent = (ToDoModel) ois.readObject();
-	    ois.close();
-	    file.close();
-	} catch (FileNotFoundException e) {
-	    // Case where there is no existing ToDoLists saved.
-	    modelToBeSent = new ToDoModel();
-	} catch (IOException e) {
-	    // TODO Auto-generated catch block
-	    System.out.println("I/O error while reading ObjectInputStream");
-	} catch (ClassNotFoundException e) {
-	    System.out.println("Serialization class could not be found!");
-	}
-	control = new ToDoController(modelToBeSent);
-	control.addObserver(view);
+    	// Creates the model to be used by the controller.
+    	ToDoModel modelToBeSent = null;
+    	try {
+    		// Case where there is/are existing ToDoLists saved.
+    		FileInputStream file = new FileInputStream("save.dat");
+    		ObjectInputStream ois = new ObjectInputStream(file);
+    		modelToBeSent = (ToDoModel) ois.readObject();
+    		ois.close();
+    		file.close();
+    	} catch (FileNotFoundException e) {
+    		// Case where there is no existing ToDoLists saved.
+    		modelToBeSent = new ToDoModel();
+    	} catch (IOException e) {
+    		// TODO Auto-generated catch block
+    		System.out.println("I/O error while reading ObjectInputStream");
+    	} catch (ClassNotFoundException e) {
+    		System.out.println("Serialization class could not be found!");
+    	}
+    	control = new ToDoController(modelToBeSent);
+    	control.addObserver(view);
 
-	// topPanel holds all the buttons on top.
-	HBox topPanel = new HBox(5);
-	topPanel.setPadding(new Insets(5));
-	window.setTop(topPanel);
+    	// topPanel holds all the buttons on top.
+    	HBox topPanel = new HBox(5);
+    	topPanel.setPadding(new Insets(5));
+    	window.setTop(topPanel);
 
-	// Buttons to be used to add tasks
-	Button addTask = new Button("Add Task");
-	// Event handler when button is clicked.
-	EventHandler<ActionEvent> taskHandler = new NewTaskHandler();
-	addTask.setOnAction(taskHandler);
+    	// Buttons to be used to add tasks
+    	Button addTask = new Button("Add Task");
+    	// Event handler when button is clicked.
+    	EventHandler<ActionEvent> taskHandler = new NewTaskHandler();
+    	addTask.setOnAction(taskHandler);
 
-	// ComboBox to choose sort criteria
-	Label sortTip = new Label("Sort by: ");
-	sort = new ComboBox<>();
-	sort.getItems().addAll("Name", "Deadline", "Importance", "Create time", "Custom");
-	sort.setEditable(false);
-	sort.setVisibleRowCount(5);
-	sort.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-	    @Override
-	    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-		if (handle)
-		    control.sort(newValue);
-	    }
-	});
+    	// ComboBox to choose sort criteria
+    	Label sortTip = new Label("Sort by: ");
+    	sort = new ComboBox<>();
+		sort.getItems().addAll("Name", "Deadline", "Importance", "Create time", "Custom");
+		sort.setEditable(false);
+		sort.setVisibleRowCount(5);
+		sort.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (handle)
+					control.sort(newValue);
+			}
+		});
 
-	// completed task
-	ck = new CheckBox("Hide Completed Task");
-	ck.setSelected(false);
-	ck.selectedProperty().addListener(new ChangeListener<Boolean>() {
-	    @Override
-	    public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
-		if (handle) {
-		    if (ck.isSelected()) {
-		    	control.hideCompletedTask();
-		    } else {
-		    	control.showCompletedTask();
-		    }
+		// completed task
+		ck = new CheckBox("Hide Completed Task");
+		ck.setSelected(false);
+		ck.selectedProperty().addListener(new ChangeListener<Boolean>() {
+			@Override
+			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
+				if (handle) {
+					if (ck.isSelected()) {
+						control.hideCompletedTask();
+					} else {
+						control.showCompletedTask();
+					}
+				}
+			}
+		});
+
+		topPanel.getChildren().addAll(sortTip, sort, ck, addTask);
+
+		// Sets up the bottom of the window which controls the current list
+		// and allows user to create new lists or delete the current list.
+		GridPane listSection = new GridPane();
+		listSection.setPadding(new Insets(10));
+		for (int i = 0; i < 3; i++) {
+			RowConstraints row = new RowConstraints();
+			row.setPercentHeight(50);
+			ColumnConstraints col = new ColumnConstraints();
+			col.setPercentWidth(33);
+			listSection.getRowConstraints().add(row);
+			listSection.getColumnConstraints().add(col);
 		}
-	    }
-	});
+		// Adds the next and previous list buttons.
+		Button nextButton = new Button("Next List");
+		nextButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				startup = true;
+				control.nextList();
+			}
+		});
+		Button prevButton = new Button("Prev List");
+		prevButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				startup = true;
+				control.prevList();
+			}
+		});
+		listSection.add(prevButton, 0, 0);
+		listSection.add(nextButton, 2, 0);
+		// Adds listName label which is where the name of the list will be.
+		listName = new Label("List 1");
+		listSection.add(listName, 1, 0);
+		// Adds the Add List Button
+		Button addList = new Button("Add List");
+		EventHandler<ActionEvent> listAddHandler = new NewListHandler();
+		addList.setOnAction(listAddHandler);
+		listSection.add(addList, 0, 1);
+		// Adds the Rename List Button
+		Button renameList = new Button("Rename List");
+		EventHandler<ActionEvent> listRenameHandler = new RenameListHandler();
+		renameList.setOnAction(listRenameHandler);
+		listSection.add(renameList, 1, 1);
+		// Adds the Delete List Button
+		Button deleteList = new Button("Delete Current List");
+		EventHandler<ActionEvent> listDeleteHandler = new DeleteListHandler();
+		deleteList.setOnAction(listDeleteHandler);
+		listSection.add(deleteList, 2, 1);
+		// Adds the change color button
+		changeColor = new ChoiceBox<String>();
+		changeColor.getItems().add("List Color: Beige");
+		changeColor.getItems().add("List Color: Blue");
+		changeColor.getItems().add("List Color: Gray");
+		changeColor.getItems().add("List Color: Orange");
+		changeColor.getItems().add("List Color: Pink");
+		changeColor.getItems().add("List Color: Red");
+		changeColor.getItems().add("List Color: Tan");
+		changeColor.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				if (handle) {
+					String[] color = ((String) changeColor.getValue()).split(" ");
+					control.changeColor(color[2].toLowerCase());
+				}
+			}
+		});
+		listSection.add(changeColor, 1, 2);
+		// Makes it so the list switch/add/remove/rename stuff is at bottom of
+		// window.
+		window.setBottom(listSection);
 
-	topPanel.getChildren().addAll(sortTip, sort, ck, addTask);
+		// Code to save all the lists when the window is closed.
+		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			@Override
+			public void handle(WindowEvent arg0) {
+				try {
+					control.saveLists();
+				} catch (IOException e) {
+					System.out.println("Error: Could not save Lists!");
+				}
+			}
+		});
 
-	// Sets up the bottom of the window which controls the current list
-	// and allows user to create new lists or delete the current list.
-	GridPane listSection = new GridPane();
-	listSection.setPadding(new Insets(10));
-	for (int i = 0; i < 3; i++) {
-	    RowConstraints row = new RowConstraints();
-	    row.setPercentHeight(50);
-	    ColumnConstraints col = new ColumnConstraints();
-	    col.setPercentWidth(33);
-	    listSection.getRowConstraints().add(row);
-	    listSection.getColumnConstraints().add(col);
-	}
-	// Adds the next and previous list buttons.
-	Button nextButton = new Button("Next List");
-	nextButton.setOnAction(new EventHandler<ActionEvent>() {
-	    @Override
-	    public void handle(ActionEvent arg0) {
-	    	startup = true;
-	    	control.nextList();
-	    }
-	});
-	Button prevButton = new Button("Prev List");
-	prevButton.setOnAction(new EventHandler<ActionEvent>() {
-	    @Override
-	    public void handle(ActionEvent arg0) {
-	    	startup = true;
-	    	control.prevList();
-	    }
-	});
-	listSection.add(prevButton, 0, 0);
-	listSection.add(nextButton, 2, 0);
-	// Adds listName label which is where the name of the list will be.
-	listName = new Label("List 1");
-	listSection.add(listName, 1, 0);
-	// Adds the Add List Button
-	Button addList = new Button("Add List");
-	EventHandler<ActionEvent> listAddHandler = new NewListHandler();
-	addList.setOnAction(listAddHandler);
-	listSection.add(addList, 0, 1);
-	// Adds the Rename List Button
-	Button renameList = new Button("Rename List");
-	EventHandler<ActionEvent> listRenameHandler = new RenameListHandler();
-	renameList.setOnAction(listRenameHandler);
-	listSection.add(renameList, 1, 1);
-	// Adds the Delete List Button
-	Button deleteList = new Button("Delete Current List");
-	EventHandler<ActionEvent> listDeleteHandler = new DeleteListHandler();
-	deleteList.setOnAction(listDeleteHandler);
-	listSection.add(deleteList, 2, 1);
-	// Adds the change color button
-	changeColor = new ChoiceBox<String>();
-	changeColor.getItems().add("List Color: Beige");
-	changeColor.getItems().add("List Color: Blue");
-	changeColor.getItems().add("List Color: Gray");
-	changeColor.getItems().add("List Color: Orange");
-	changeColor.getItems().add("List Color: Pink");
-	changeColor.getItems().add("List Color: Red");
-	changeColor.getItems().add("List Color: Tan");
-	changeColor.setOnAction(new EventHandler<ActionEvent>() {
-	    @Override
-	    public void handle(ActionEvent arg0) {
-		if (handle) {
-		    String[] color = ((String) changeColor.getValue()).split(" ");
-		    control.changeColor(color[2].toLowerCase());
-		}
-	    }
-	});
-	listSection.add(changeColor, 1, 2);
-	// Makes it so the list switch/add/remove/rename stuff is at bottom of
-	// window.
-	window.setBottom(listSection);
+		stage.setScene(scene);
+		stage.show();
 
-	// Code to save all the lists when the window is closed.
-	stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-	    @Override
-	    public void handle(WindowEvent arg0) {
-		try {
-		    control.saveLists();
-		} catch (IOException e) {
-		    System.out.println("Error: Could not save Lists!");
-		}
-	    }
-	});
-
-	stage.setScene(scene);
-	stage.show();
-
-	control.loadView();
+		control.loadView();
 		startup = false;
     }
 
@@ -369,358 +432,380 @@ public class ToDoView extends Application implements Observer {
      */
     private class NewTaskHandler implements EventHandler<ActionEvent> {
 
-	@Override
-	public void handle(ActionEvent arg0) {
-	    // Opens a new window for the user to implement info about
-	    // a new task for.
-	    GridPane window2 = new GridPane();
-	    // Sets up 2nd window, so that there is enough space for labels
-	    // and textfield
-	    for (int i = 0; i <= 5; i++) {
-	    	RowConstraints row = new RowConstraints();
-	    	row.setPercentHeight(25);
-	    	window2.getRowConstraints().add(row);
-	    }
-	    ColumnConstraints col1 = new ColumnConstraints();
-	    col1.setPercentWidth(50);
-	    window2.getColumnConstraints().add(col1);
-	    ColumnConstraints col2 = new ColumnConstraints();
-	    col2.setPercentWidth(50);
-	    window2.getColumnConstraints().add(col2);
+    	@Override
+    	public void handle(ActionEvent arg0) {
+    		// Opens a new window for the user to implement info about
+    		// a new task for.
+    		GridPane window2 = new GridPane();
+    		// Sets up 2nd window, so that there is enough space for labels
+    		// and textfield
+    		for (int i = 0; i <= 5; i++) {
+    			RowConstraints row = new RowConstraints();
+    			row.setPercentHeight(25);
+    			window2.getRowConstraints().add(row);
+    		}
+    		ColumnConstraints col1 = new ColumnConstraints();
+    		col1.setPercentWidth(50);
+    		window2.getColumnConstraints().add(col1);
+    		ColumnConstraints col2 = new ColumnConstraints();
+    		col2.setPercentWidth(50);
+    		window2.getColumnConstraints().add(col2);
 
-	    // Sets up area for user to input name of New Task
-	    Label name = new Label("Name: ");
-	    TextField nameInput = new TextField();
-	    window2.add(name, 0, 0);
-	    window2.add(nameInput, 1, 0);
+    		// Sets up area for user to input name of New Task
+    		Label name = new Label("Name: ");
+    		TextField nameInput = new TextField();
+    		window2.add(name, 0, 0);
+    		window2.add(nameInput, 1, 0);
 
-	    // Sets up area for user to input description of New Task
-	    Label description = new Label("Description: ");
-	    TextField descriptionInput = new TextField();
-	    window2.add(description, 0, 1);
-	    window2.add(descriptionInput, 1, 1);
+    		// Sets up area for user to input description of New Task
+    		Label description = new Label("Description: ");
+    		TextField descriptionInput = new TextField();
+    		window2.add(description, 0, 1);
+    		window2.add(descriptionInput, 1, 1);
 
-	    // Sets up area for user to input deadline date of New Task
-	    Label deadline = new Label("Deadline: ");
-	    TextField deadlineInput = new TextField("mm/dd/year");
-	    window2.add(deadline, 0, 2);
-	    window2.add(deadlineInput, 1, 2);
+    		// Sets up area for user to input deadline date of New Task
+    		Label deadline = new Label("Deadline: ");
+    		TextField deadlineInput = new TextField("mm/dd/year");
+    		window2.add(deadline, 0, 2);
+    		window2.add(deadlineInput, 1, 2);
 
-	    // Sets up area for user to input importance
-	    CheckBox importanceBox = new CheckBox("Important");
-	    window2.add(importanceBox, 0, 3);
-	    importanceBox.setSelected(false);
+    		// Sets up area for user to input importance
+    		CheckBox importanceBox = new CheckBox("Important");
+    		window2.add(importanceBox, 0, 3);
+    		importanceBox.setSelected(false);
 
-	    // window2.add(importanceInput, 1, 3); LEFTOVER FROM STRING IMPLEMENTATION
+    		// window2.add(importanceInput, 1, 3); LEFTOVER FROM STRING IMPLEMENTATION
 
-	    // sets up area for user to input the location for the new task
-	    Label location = new Label("Location: ");
-	    TextField locationInput = new TextField("Name/Address");
-	    window2.add(location, 0, 4);
-	    window2.add(locationInput, 1, 4);
+    		// sets up area for user to input the location for the new task
+    		Label location = new Label("Location: ");
+    		TextField locationInput = new TextField("Name/Address");
+    		window2.add(location, 0, 4);
+    		window2.add(locationInput, 1, 4);
 
-	    // Sets up button to close the window and create the new task
-	    Button enter = new Button("Create New Task");
-	    window2.add(enter, 1, 5);
+    		// Sets up button to close the window and create the new task
+    		Button enter = new Button("Create New Task");
+    		window2.add(enter, 1, 5);
 
-	    Scene scene2 = new Scene(window2, 500, 300);
+    		Scene scene2 = new Scene(window2, 500, 300);
 
-	    Stage stage2 = new Stage();
-	    stage2.setTitle("New Task");
-	    stage2.setScene(scene2);
+    		Stage stage2 = new Stage();
+    		stage2.setTitle("New Task");
+    		stage2.setScene(scene2);
 
-	    // Implementation of New Task button
-	    enter.setOnAction(new EventHandler<ActionEvent>() {
+    		// Implementation of New Task button
+    		enter.setOnAction(new EventHandler<ActionEvent>() {
 
-		@Override
-		public void handle(ActionEvent arg0) {
-		    String curName = nameInput.getText();
-		    String curDescription = descriptionInput.getText();
-		    String curDeadline = deadlineInput.getText();
-		    String curImportant;
-		    if (importanceBox.isSelected()) {
-		    	curImportant = "Important!!!";
-		    } else {
-		    	curImportant = "";
-		    }
-		    String curLocation = locationInput.getText();
-		    control.addTask(curName, curDescription, curDeadline, curImportant, curLocation);
+    			@Override
+    			public void handle(ActionEvent arg0) {
+    				String curName = nameInput.getText();
+    				String curDescription = descriptionInput.getText();
+    				String curDeadline = deadlineInput.getText();
+    				String curImportant;
+    				if (importanceBox.isSelected()) {
+    					curImportant = "Important!!!";
+    				} else {
+    					curImportant = "";
+    				}
+    				String curLocation = locationInput.getText();
+    				control.addTask(curName, curDescription, curDeadline, curImportant, curLocation);
 
-		    stage2.close();
-		}
+    				stage2.close();
+    			}
 
-	    });
+    		});
 
-	    stage2.showAndWait();
-	}
+    		stage2.showAndWait();
+    	}
 
-    }
-
-    private class importanceHandler implements EventHandler<ActionEvent> {
-
-	@Override
-	public void handle(ActionEvent arg0) {
-	    String currID = ((CheckBox) arg0.getSource()).getId();
-	    int curr = Integer.parseInt(currID);
-	    if (((CheckBox) arg0.getSource()).isSelected()) {
-	    	control.changeImportance("Important!!!", curr);
-	    } else {
-	    	control.changeImportance("", curr);
-	    }
-	}
-    }
-
-    private class completionHandler implements EventHandler<ActionEvent> {
-
-	@Override
-	public void handle(ActionEvent arg0) {
-	    String currID = ((CheckBox) arg0.getSource()).getId();
-	    int curr = Integer.parseInt(currID);
-	    if (((CheckBox) arg0.getSource()).isSelected()) {
-	    	control.changeCompletion(true, curr);
-	    } else {
-	    	control.changeCompletion(false, curr);
-	    }
-	}
-    }
-
-    private void checkboxHelper(String important, boolean complete, CheckBox c1, CheckBox c2) {
-	if (complete) {
-	    c1.setSelected(true);
-	}
-	if (important != "") {
-	    c2.setSelected(true);
-	}
-
-	return;
     }
 
     /**
-     * Updates the view with the passed Object.
-     * 
+     * Handler class checks to see if the importance value was marked or
+     * unmarked then updates the value by sending the new value to the 
+     * controller. 
      */
+    private class importanceHandler implements EventHandler<ActionEvent> {
+
+    	@Override
+    	public void handle(ActionEvent arg0) {
+    		String currID = ((CheckBox) arg0.getSource()).getId();
+    		int curr = Integer.parseInt(currID);
+    		if (((CheckBox) arg0.getSource()).isSelected()) {
+    			control.changeImportance("Important!!!", curr);
+    		} else {
+    			control.changeImportance("", curr);
+    		}
+    	}
+    }
+
+    /**
+     * Handler class checks to see if the complete value was marked or
+     * unmarked then updates the value by sending the new value to the 
+     * controller. 
+     */
+    private class completionHandler implements EventHandler<ActionEvent> {
+
+    	@Override
+    	public void handle(ActionEvent arg0) {
+    		String currID = ((CheckBox) arg0.getSource()).getId();
+    		int curr = Integer.parseInt(currID);
+    		if (((CheckBox) arg0.getSource()).isSelected()) {
+    			control.changeCompletion(true, curr);
+    		} else {
+    			control.changeCompletion(false, curr);
+    		}
+    	}
+    }
+
+    /**
+     * Checks if the specified check boxes are filled in or not. 
+     * 
+     * @param important String that represents the importance of a task.
+     * @param complete  boolean that represents the completion status. 
+     * @param c1        checkbox for the completion status of a task. 
+     * @param c2		checkbox for the importance of a task. 
+     */
+    private void checkboxHelper(String important, boolean complete, CheckBox c1, CheckBox c2) {
+    	if (complete) {
+    		c1.setSelected(true);
+    	}
+    	if (important != "") {
+    		c2.setSelected(true);
+    	}
+
+    	return;
+    }
+
+    /**
+	 * update changes the current view based on changes to the ToDo list made
+	 * by the user and then instantly refreshes to reflect any changes made. 
+	 *
+	 * @param o       The observable object
+	 * @param newList Takes in an instance of the ToDoList class to iterate 
+	 * 				  over and update the current view.
+	 */   
     @Override
     public void update(Observable o, Object newList) {
-	ObservableList<HBox> rows = FXCollections.observableArrayList();
-	taskSection.getChildren().clear();
-	id = 0;
+    	ObservableList<HBox> rows = FXCollections.observableArrayList();
+    	taskSection.getChildren().clear();
+    	id = 0;
 
-	// Ensures that on startUp the button being selected doesn't do anything.
-	handle = false;
-	// Sets the color of the list.
-	switch (((ToDoList) newList).getColor()) {
-	case "blue":
-	    taskSection.setStyle("-fx-background-color: lightblue;");
-	    if (startup)
-		changeColor.getSelectionModel().select(1);
-	    break;
-	case "gray":
-	    taskSection.setStyle("-fx-background-color: slategrey;");
-	    if (startup)
-		changeColor.getSelectionModel().select(2);
-	    break;
-	case "orange":
-	    taskSection.setStyle("-fx-background-color: orange;");
-	    if (startup)
-		changeColor.getSelectionModel().select(3);
-	    break;
-	case "pink":
-	    taskSection.setStyle("-fx-background-color: pink;");
-	    if (startup)
-		changeColor.getSelectionModel().select(4);
-	    break;
-	case "red":
-	    taskSection.setStyle("-fx-background-color: crimson;");
-	    if (startup)
-		changeColor.getSelectionModel().select(5);
-	    break;
-	case "tan":
-	    taskSection.setStyle("-fx-background-color: tan;");
-	    if (startup)
-		changeColor.getSelectionModel().select(6);
-	    break;
-	default:
-	    // By default list is colored beige.
-	    taskSection.setStyle("-fx-background-color: beige;");
-	    if (startup)
-		changeColor.getSelectionModel().select(0);
-	    break;
-	}
-	// Sets the sorting method choice.
-	switch (((ToDoList) newList).getCurrentSorting()) {
-	case "Name":
-	    if (startup)
-		sort.getSelectionModel().select(0);
-	    break;
-	case "Deadline":
-	    if (startup)
-		sort.getSelectionModel().select(1);
-	    break;
-	case "Importance":
-	    if (startup)
-		sort.getSelectionModel().select(2);
-	    break;
-	case "Create time":
-	    if (startup)
-		sort.getSelectionModel().select(3);
-	    break;
-	default:
-	    // Default sort is Custom
-	    sort.getSelectionModel().select(4);
-	    break;
-	}
-	// Determines what the hide completed checkbox when a new list is
-	// loaded into the view.
-	if (((ToDoList) newList).getHideComplete()) {
-	    if (startup)
-		ck.setSelected(true);
-	} else {
-	    if (startup)
-		ck.setSelected(false);
-	}
-	// Ensures that program knows that not a startUp and that buttons
-	// being clicked should handle things again.
-	startup = false;
-	handle = true;
+    	// Ensures that on startUp the button being selected doesn't do anything.
+    	handle = false;
+    	// Sets the color of the list.
+    	switch (((ToDoList) newList).getColor()) {
+    	case "blue":
+    		taskSection.setStyle("-fx-background-color: lightblue;");
+    		if (startup)
+    			changeColor.getSelectionModel().select(1);
+    		break;
+    	case "gray":
+    		taskSection.setStyle("-fx-background-color: slategrey;");
+    		if (startup)
+    			changeColor.getSelectionModel().select(2);
+    		break;
+    	case "orange":
+    		taskSection.setStyle("-fx-background-color: orange;");
+    		if (startup)
+    			changeColor.getSelectionModel().select(3);
+    		break;
+    	case "pink":
+    		taskSection.setStyle("-fx-background-color: pink;");
+    		if (startup)
+    			changeColor.getSelectionModel().select(4);
+    		break;
+    	case "red":
+    		taskSection.setStyle("-fx-background-color: crimson;");
+    		if (startup)
+    			changeColor.getSelectionModel().select(5);
+    		break;
+    	case "tan":
+    		taskSection.setStyle("-fx-background-color: tan;");
+    		if (startup)
+    			changeColor.getSelectionModel().select(6);
+    		break;
+    	default:
+    		// By default list is colored beige.
+    		taskSection.setStyle("-fx-background-color: beige;");
+    		if (startup)
+    			changeColor.getSelectionModel().select(0);
+    		break;
+    	}
+    	// Sets the sorting method choice.
+    	switch (((ToDoList) newList).getCurrentSorting()) {
+    	case "Name":
+    		if (startup)
+    			sort.getSelectionModel().select(0);
+    		break;
+    	case "Deadline":
+    		if (startup)
+    			sort.getSelectionModel().select(1);
+    		break;
+    	case "Importance":
+    		if (startup)
+    			sort.getSelectionModel().select(2);
+    		break;
+    	case "Create time":
+    		if (startup)
+    			sort.getSelectionModel().select(3);
+    		break;
+    	default:
+    		// Default sort is Custom
+    		sort.getSelectionModel().select(4);
+    		break;
+    	}
+    	// Determines what the hide completed checkbox when a new list is
+    	// loaded into the view.
+    	if (((ToDoList) newList).getHideComplete()) {
+    		if (startup)
+    			ck.setSelected(true);
+    	} else {
+    		if (startup)
+    			ck.setSelected(false);
+    	}
+    	// Ensures that program knows that not a startUp and that buttons
+    	// being clicked should handle things again.
+    	startup = false;
+    	handle = true;
 
-	// For loop sets up all the tasks within the model.
-	for (int i = 0; i < ((ToDoList) newList).amountTasks(); i++) {
-	    ToDoTask newTask = ((ToDoList) newList).getTask(i);
+    	// For loop sets up all the tasks within the model.
+    	for (int i = 0; i < ((ToDoList) newList).amountTasks(); i++) {
+    		ToDoTask newTask = ((ToDoList) newList).getTask(i);
 
-	    HBox h = new HBox(5);
-	    Label label = new Label(((ToDoTask) newTask).getName());
-	    Pane pane = new Pane();
-	    Button renameButton=new Button("Rename");
-	    Button upButton = new Button("Move up");
-	    Button topButton = new Button("Move Top");
-	    Button button = new Button("Remove");
-	    CheckBox c1 = new CheckBox("Complete");
-	    CheckBox c2 = new CheckBox("Important");
-	    c1.setId("" + id);
-	    c2.setId("" + id);
-	    checkboxHelper(newTask.getImportance(), newTask.getCompletion(), c1, c2);
-	    renameButton.setId(""+id);  //TODO MAURICIO: CREATE EVENT HANDLER
-	    button.setId("" + id);
-	    upButton.setId("" + id);
-	    topButton.setId("" + id);
-	    id++;
+    		HBox h = new HBox(5);
+    		Label label = new Label(((ToDoTask) newTask).getName());
+    		Pane pane = new Pane();
+    		Button renameButton=new Button("Rename");
+    		Button upButton = new Button("Move up");
+    		Button topButton = new Button("Move Top");
+    		Button button = new Button("Remove");
+    		CheckBox c1 = new CheckBox("Complete");
+    		CheckBox c2 = new CheckBox("Important");
+    		c1.setId("" + id);
+    		c2.setId("" + id);
+    		checkboxHelper(newTask.getImportance(), newTask.getCompletion(), c1, c2);
+    		renameButton.setId(""+id);  //TODO MAURICIO: CREATE EVENT HANDLER
+    		button.setId("" + id);
+    		upButton.setId("" + id);
+    		topButton.setId("" + id);
+    		id++;
 
-	    Label description = new Label(((ToDoTask) newTask).getDescription());
-	    Label deadline = new Label(((ToDoTask) newTask).getDeadline());
-	    Label location = new Label(((ToDoTask) newTask).getLocation());
-	    h.getChildren().addAll(label, pane, description, deadline, location, c1, c2, renameButton, upButton, topButton, button);
+    		Label description = new Label(((ToDoTask) newTask).getDescription());
+    		Label deadline = new Label(((ToDoTask) newTask).getDeadline());
+    		Label location = new Label(((ToDoTask) newTask).getLocation());
+    		h.getChildren().addAll(label, pane, description, deadline, location, c1, c2, renameButton, upButton, topButton, button);
 
-	    EventHandler<ActionEvent> completionHandler = new completionHandler();
-	    EventHandler<ActionEvent> importanceHandler = new importanceHandler();
-	    c1.setOnAction(completionHandler);
-	    c2.setOnAction(importanceHandler);
+    		EventHandler<ActionEvent> completionHandler = new completionHandler();
+    		EventHandler<ActionEvent> importanceHandler = new importanceHandler();
+    		c1.setOnAction(completionHandler);
+    		c2.setOnAction(importanceHandler);
 	    
-	    renameButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+    		renameButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
-		@Override
-		public void handle(MouseEvent arg0) {
-		    //TODO MAURICIO: COME BACK HERE
-		    String index=((Node) arg0.getSource()).getId();
-	    	    int ind=Integer.parseInt(index);
-	    	    //control.renameTask()
+    			@Override
+    			public void handle(MouseEvent arg0) {
+    				//TODO MAURICIO: COME BACK HERE
+    				String index=((Node) arg0.getSource()).getId();
+    				int ind=Integer.parseInt(index);
+    				//control.renameTask()
+    				
+    				//***BEGINNING
 	    	    
-	    	    //***BEGINNING
+    				GridPane window2 = new GridPane();
+
+    				for (int i = 0; i < 2; i++) {
+    					RowConstraints row = new RowConstraints();
+    					row.setPercentHeight(50);
+    					window2.getRowConstraints().add(row);
+    					ColumnConstraints col = new ColumnConstraints();
+    					col.setPercentWidth(50);
+    					window2.getColumnConstraints().add(col);
+    				}
+
+    				Label name = new Label("Name: ");
+    				TextField nameInput = new TextField();
+    				window2.add(name, 0, 0);
+    				window2.add(nameInput, 1, 0);
+
+    				Button enter = new Button("Rename the Task");
+    				window2.add(enter, 1, 1);
+
+    				Scene scene2 = new Scene(window2, 250, 100);
+
+    				Stage stage2 = new Stage();
+    				stage2.setTitle("Rename Task");
+    				stage2.setScene(scene2);
+
+    				// Implementation of New List button
+    				enter.setOnAction(new EventHandler<ActionEvent>() {
+
+    					@Override
+    					public void handle(ActionEvent arg0) {
+    						String curName = nameInput.getText();
+    						control.renameTask(curName,ind);
+    						stage2.close();
+    					}
+    				});
+    				stage2.showAndWait();
 	    	    
-		    GridPane window2 = new GridPane();
-
-		    for (int i = 0; i < 2; i++) {
-		    	RowConstraints row = new RowConstraints();
-		    	row.setPercentHeight(50);
-		    	window2.getRowConstraints().add(row);
-		    	ColumnConstraints col = new ColumnConstraints();
-		    	col.setPercentWidth(50);
-		    	window2.getColumnConstraints().add(col);
-		    }
-
-		    Label name = new Label("Name: ");
-		    TextField nameInput = new TextField();
-		    window2.add(name, 0, 0);
-		    window2.add(nameInput, 1, 0);
-
-		    Button enter = new Button("Rename the Task");
-		    window2.add(enter, 1, 1);
-
-		    Scene scene2 = new Scene(window2, 250, 100);
-
-		    Stage stage2 = new Stage();
-		    stage2.setTitle("Rename Task");
-		    stage2.setScene(scene2);
-
-		    // Implementation of New List button
-		    enter.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent arg0) {
-			    String curName = nameInput.getText();
-			    control.renameTask(curName,ind);
-			    stage2.close();
-			}
-		    });
-		    stage2.showAndWait();
-	    	    
-	    	    //***ENDING
-		}
+    				//***ENDING
+    			}
 		
-	    });
+    		});
+    		
+    		button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+    			@Override
+    			public void handle(MouseEvent arg0) {
+    				// tell controller to update the view
+    				String index = ((Node) arg0.getSource()).getId();
+    				int ind = Integer.parseInt(index);
+    				for (int i = 0; i < id; i++) {
+    					if (i > ind) {
+    						String currID = rows.get(i).getChildren().get(7).getId();
+		    			int curr = Integer.parseInt(currID) - 1;
+		    			rows.get(i).getChildren().get(5).setId("" + curr);
+		    			rows.get(i).getChildren().get(6).setId("" + curr);
+		    			rows.get(i).getChildren().get(7).setId("" + curr);
+    					}
+    				}
+    				rows.remove(ind);
+    				id--;
+    				control.removeTask(ind);
+    			}
+    		});
 
-	    button.setOnMouseClicked(new EventHandler<MouseEvent>() {
-		@Override
-		public void handle(MouseEvent arg0) {
-		    // tell controller to update the view
-		    String index = ((Node) arg0.getSource()).getId();
-		    int ind = Integer.parseInt(index);
-		    for (int i = 0; i < id; i++) {
-		    	if (i > ind) {
-		    		String currID = rows.get(i).getChildren().get(7).getId();
-		    		int curr = Integer.parseInt(currID) - 1;
-		    		rows.get(i).getChildren().get(5).setId("" + curr);
-		    		rows.get(i).getChildren().get(6).setId("" + curr);
-		    		rows.get(i).getChildren().get(7).setId("" + curr);
-		    	}
-		    }
-		    rows.remove(ind);
-		    id--;
-		    control.removeTask(ind);
-		}
-	    });
+    		upButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
-	    upButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+    			@Override
+    			public void handle(MouseEvent arg0) {
+    				String index = ((Node) arg0.getSource()).getId();
+    				int ind = Integer.parseInt(index);
+    				control.moveUp(ind);
+    			}
+    		});
 
-		@Override
-		public void handle(MouseEvent arg0) {
-		    String index = ((Node) arg0.getSource()).getId();
-		    int ind = Integer.parseInt(index);
-		    control.moveUp(ind);
-		}
-	    });
+    		topButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
-	    topButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+    			@Override
+    			public void handle(MouseEvent arg0) {
+    				String index = ((Node) arg0.getSource()).getId();
+    				int ind = Integer.parseInt(index);
+    				control.moveTop(ind);
+    			}
+    		});
 
-		@Override
-		public void handle(MouseEvent arg0) {
-		    String index = ((Node) arg0.getSource()).getId();
-		    int ind = Integer.parseInt(index);
-		    control.moveTop(ind);
-		}
-	    });
+    		h.setStyle("-fx-background-color: white;");
+    		label.setStyle("-fx-padding: 4 0 5 5;");
+    		HBox.setHgrow(pane, Priority.ALWAYS);
+    		rows.add(h);
+    		ListView<HBox> list = new ListView<HBox>();
+    		list.setItems(rows);
 
-	    h.setStyle("-fx-background-color: white;");
-	    label.setStyle("-fx-padding: 4 0 5 5;");
-	    HBox.setHgrow(pane, Priority.ALWAYS);
-	    rows.add(h);
-	    ListView<HBox> list = new ListView<HBox>();
-	    list.setItems(rows);
-
-	    taskSection.getChildren().clear();
-	    taskSection.getChildren().addAll(rows);
-	}
-	// Sets up the name of the list.
-	listName.setText(((ToDoList) newList).getNameList());
+    		taskSection.getChildren().clear();
+    		taskSection.getChildren().addAll(rows);
+    	}
+    	// Sets up the name of the list.
+    	listName.setText(((ToDoList) newList).getNameList());
     }
 
 }
