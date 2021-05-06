@@ -18,6 +18,11 @@ import view.ToDoView;
  */
 public class ToDoMain {
 
+	/**
+	 * Launches the GUI
+	 * 
+	 * @param args empty String array object. 
+	 */
     public static void main(String args[]) {
     	Application.launch(ToDoView.class, args);
     }

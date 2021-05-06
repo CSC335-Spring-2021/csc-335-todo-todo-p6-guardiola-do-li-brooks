@@ -124,10 +124,13 @@ public class ToDoList extends Observable implements Serializable {
     }
 
     /**
-	 * Receives String from input to rename specified task to the new string.
+     * Adds a new task to the current viewable list.
 	 * 
-	 * @param name String containing the new task name.
-	 * @param pos  Integer position of the current task being renamed.
+	 * @param taskName    The name of the task.
+     * @param description The notes/description about the task.
+     * @param deadline    The deadline for the task. (Should be (m/d/yr))
+     * @param importance  Indicates whether the task is important or not.
+     * @param location    The String representing the location of the task.
 	 */
     public void addTask(String taskName, String description, String deadline, String importance, String location) {
     	ToDoTask newTask = new ToDoTask(taskName, description, deadline, importance, location);

@@ -133,6 +133,13 @@ public class ToDoModel implements Serializable {
 		loadView();
     }
     
+    /**
+     * Renames the current task to the given name and then notifies the view that
+     * the list has been renamed.
+     * 
+     * @param name The new name of the task.
+     * @param pos  The index of the task being updated.
+     */
     public void renameTask(String name,int pos) {
     	lists.get(curList).renameTask(name,pos);
     	if (lists.get(curList).getCurrentSorting().equals("Name")) {
@@ -313,6 +320,8 @@ public class ToDoModel implements Serializable {
     
     /**
 	 * Gets the String name of the current list to assist in JUnit testing.
+	 * 
+	 * @return String name of the current list. 
 	 */
     public String getNameList() {
     	return this.lists.get(curList).getNameList();
