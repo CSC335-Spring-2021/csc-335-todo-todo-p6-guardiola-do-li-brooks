@@ -1,7 +1,10 @@
 package test;
 import static org.junit.jupiter.api.Assertions.*;
 
-
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -45,7 +48,8 @@ public class ToDoTest implements Observer {
     	ToDoController control = new ToDoController(model);
     	control.addObserver(this);
     	
-    	control.addTask("Task 1", "First", "01/01/2005", "Important!!!", "Tucson");
+    	int retVal = control.addTask("Task 1", "First", "01/01/2005", 
+    			"Important!!!", "Tucson");
     	ToDoTask task1 = list.getTask(0);
     	ToDoTask test1 = new ToDoTask("Task 1", "First", "01/01/2005", 
     			"Important!!!", "Tucson");
@@ -57,6 +61,7 @@ public class ToDoTest implements Observer {
     	assertEquals(test1.getImportance(), task1.getImportance());
     	assertEquals(test1.getLocation(), task1.getLocation());
     	assertEquals(test1.getCompletion(), task1.getCompletion());
+    	assertEquals(0, retVal);
     	
     	// Tests that multiple tasks can be added to the list.
     	control.addTask("Task 2", "", "01/01/2006", "", "Name/Address");
@@ -78,6 +83,15 @@ public class ToDoTest implements Observer {
     	assertEquals(test3.getImportance(), task3.getImportance());
     	assertEquals(test3.getLocation(), task3.getLocation());
     	assertEquals(test3.getCompletion(), task3.getCompletion());
+    	
+    	// Test that a task can't be created if no name is supplied.
+    	retVal = control.addTask("", "", "01/01/2001", "", "");
+    	assertEquals(1, retVal);
+    	// Test that a task can't be created if no deadline is supplied.
+    	retVal = control.addTask("Name", "", "mm/dd/year", "", "");
+    	assertEquals(2, retVal);
+    	retVal = control.addTask("Name", "", "", "", "");
+    	assertEquals(2, retVal);
     }
     
     /**
@@ -468,6 +482,83 @@ public class ToDoTest implements Observer {
     	// now show all tasks and see if they are now present
     	control.showCompletedTask();
     	assertEquals(list.amountTasks(), 2);
+    }
+    
+    /**
+     * Used to test the saving function of ToDo
+     */
+    @Test
+    void testSaveLists() {
+    	// Creates an empty ToDoModel
+    	ToDoModel model = new ToDoModel();
+    	// Creates a controller using that model and adds this test as an observer.
+    	ToDoController control = new ToDoController(model);
+    	control.addObserver(this);
+    	
+    	// Adds two tasks and a new list with one task and then saves the ToDo
+    	// lists. Also changes color of list to make sure that is saved too.
+    	control.addTask("Yellow", "Color", "01/01/2001", "Important!!!", "Tucson");
+    	control.addTask("Bellow", "", "05/05/2021", "", "");
+    	control.changeColor("Blue");
+    	control.renameList("First");
+    	control.addList("List 2");
+    	control.addTask("Task", "", "01/05/2021", "", "");
+    	control.changeColor("Red");
+    	try {
+			control.saveLists();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Shouldn't run!");
+		}
+    	// At this point the list should be saved in save.dat
+    	
+    	// Loads the file and creates a new control object using that save.
+    	// This code is taken straight from the GUI.
+    	ToDoModel modelToBeSent = null;
+    	try {
+    		// Case where there is/are existing ToDoLists saved.
+    		FileInputStream file = new FileInputStream("save.dat");
+    		ObjectInputStream ois = new ObjectInputStream(file);
+    		modelToBeSent = (ToDoModel) ois.readObject();
+    		ois.close();
+    		file.close();
+    	} catch (FileNotFoundException e) {
+    		// Case where there is no existing ToDoLists saved.
+    		modelToBeSent = new ToDoModel();
+    	} catch (IOException e) {
+    		// TODO Auto-generated catch block
+    		System.out.println("I/O error while reading ObjectInputStream");
+    	} catch (ClassNotFoundException e) {
+    		System.out.println("Serialization class could not be found!");
+    	}
+    	ToDoController control2 = new ToDoController(modelToBeSent);
+    	control2.addObserver(this);
+    	
+    	// Checks that the current list still has the name, color, and tasks
+    	assertEquals("List 2", list.getNameList());
+    	assertEquals("Red", list.getColor());
+    	assertEquals("Task", list.getTask(0).getName());
+    	assertEquals("", list.getTask(0).getDescription());
+    	assertEquals("01/05/2021", list.getTask(0).getDeadline());
+    	assertEquals("", list.getTask(0).getImportance());
+    	assertEquals("", list.getTask(0).getLocation());
+    	
+    	// Iterates to the first list.
+    	control2.prevList();
+    	// Checks that the previous list was also saved.
+    	assertEquals("First", list.getNameList());
+    	assertEquals("Blue", list.getColor());
+    	assertEquals("Yellow", list.getTask(0).getName());
+    	assertEquals("Color", list.getTask(0).getDescription());
+    	assertEquals("01/01/2001", list.getTask(0).getDeadline());
+    	assertEquals("Important!!!", list.getTask(0).getImportance());
+    	assertEquals("Tucson", list.getTask(0).getLocation());
+    	assertEquals("Bellow", list.getTask(1).getName());
+    	assertEquals("", list.getTask(1).getDescription());
+    	assertEquals("05/05/2021", list.getTask(1).getDeadline());
+    	assertEquals("", list.getTask(1).getImportance());
+    	assertEquals("", list.getTask(1).getLocation());
+    	
     }
     
     /**

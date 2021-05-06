@@ -507,9 +507,28 @@ public class ToDoView extends Application implements Observer {
     					curImportant = "";
     				}
     				String curLocation = locationInput.getText();
-    				control.addTask(curName, curDescription, curDeadline, curImportant, curLocation);
-
-    				stage2.close();
+    				int retVal = control.addTask(curName, curDescription, curDeadline, curImportant, curLocation);
+    				// Checks name and deadline were given.
+    				if (retVal == 1) {
+    					// Case no Name was supplied.
+    					Alert error = new Alert(Alert.AlertType.INFORMATION);
+    		    		error.setTitle("ERROR");
+    		    		error.setHeaderText("No Name Entered");
+    		    		error.setContentText("Must Enter a Name");
+    		    		error.showAndWait();
+    				} else if (retVal == 2) {
+    					// Case no Deadline or incorrect Deadline supplied.
+    					Alert error = new Alert(Alert.AlertType.INFORMATION);
+    		    		error.setTitle("ERROR");
+    		    		error.setHeaderText("Invalid Date Entered");
+    		    		error.setContentText("Use Format 'mm/dd/year'.");
+    		    		error.showAndWait();
+    				} else {
+    					// Case task was successfully added.
+    					stage2.close();
+    				}
+    				
+    				
     			}
 
     		});

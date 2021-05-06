@@ -126,29 +126,25 @@ public class ToDoController {
      * @param deadline    The deadline for the task. (Should be (m/d/yr))
      * @param importance  Indicates whether the task is important or not.
      * @param location    The String representing the location of the task. 
+     * @return A number that indicates whether addTask was successful.
+     *         0 indicates nothing went wrong. 1 indicates that no name was
+     *         supplied. 2 indicates that no deadline or an incorrect deadline
+     *         was supplied.
      */
-    public void addTask(String name, String description, String deadline, String importance, String location) {
+    public int addTask(String name, String description, String deadline, String importance, String location) {
     	if (name.equals("")) {
-    		Alert error = new Alert(Alert.AlertType.INFORMATION);
-    		error.setTitle("ERROR");
-    		error.setHeaderText("No Name Entered");
-    		error.setContentText("Must Enter a Name");
-    		error.showAndWait();
-    		return;
+    		return 1;
     	}
     	String[] deadlineArr=deadline.split("/");
     	if (deadline.equals("mm/dd/year") || deadlineArr.length!=3) {
-    		Alert error = new Alert(Alert.AlertType.INFORMATION);
-    		error.setTitle("ERROR");
-    		error.setHeaderText("Invalid Date Entered");
-    		error.setContentText("Use Format 'mm/dd/year'.");
-    		error.showAndWait();
-    		return;
+    		return 2;
     	}
     	if (location.equals("Name/Address")) {
     		location = "";
     	}
     	model.addTask(name, description, deadline, importance, location);
+    	// Indicates no error with adding task to ToDo.
+    	return 0;
     }
 
     /**
